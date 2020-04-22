@@ -1,0 +1,24 @@
+---
+layout: post
+title:  "ssh 代理设置"
+date: 2020-04-22 08:50:15 +0000   
+---
+
+kw_ssh
+kw_git
+
+在受限网络环境通过代理访问外部网络时，使用 ssh 方式访问 github 需要在主机上配置 ~/.ssh/config 。例如：
+
+```bash
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa
+  ProxyCommand connect -H <IP>:<port> %h %p
+```
+
+有几点注意点：
+1. config 以及 id_rsa 文件的权限可能需要修改：```chmod 600 <file>```
+2. IdentityFile 字段是必须的
+3. ProxyCommand 字段如果没有 connect 命令需要安装：例如：```apt install connect-proxy```
+4. ProxyCommand 字段也可以使用其他命令，例如 socat 、nc ，相应地参数的写法需要适配
