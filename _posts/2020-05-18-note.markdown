@@ -7,7 +7,7 @@ date: 2020-05-18 08:50:15 +0000
 第一章 运行时结构及编译过程概述
 ------
 
-![c_run_stack](https://github.com/hujp/devops-logs/raw/master/statics/2020-05-18_c_run_stack.png)
+![c_run_stack](statics/2020-05-18_c_run_stack.png)
 
 1. 实参的存储位置在调用函数的栈空间，形参既然是值传递应该在被调用函数的栈空间吧？
 2. 局部变量定义使用栈空间，动态内存分配使用堆空间？
