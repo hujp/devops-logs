@@ -13,3 +13,33 @@ date: 2020-05-18 08:50:15 +0000
 2. 局部变量定义使用栈空间，动态内存分配使用堆空间？
 3. 词法分析识别符号，语法分析匹配语句。
 4. 汇编基础知识？
+
+第二章 词法分析
+------
+
+![state_convert]({{ site.url }}/devops-logs/statics/2020-05-19_state_convert.png)
+
+1. 状态转换图的概念，空白、换行、数字、字符串 标识符等各状态与 C 语法的对应
+2. libcpp/lex.c
+    * _cpp_lex_direct， “前瞻判断”思想，使用goto 语句
+    * result = pfile->cur_token++，猜测应该是反复调用 _cpp_lex_direct 函数将所有分析出来的 token 存储在 pfile->?
+    * ... 变参！
+    * lex_number 先将数字当做字符串识别，后续再调用相关函数进一步处理
+    * lex_string
+    * lex_identifier
+3. libcpp/expr.c
+    * cpp_classify_number 整型/浮点型（小数、指数）、进制、后缀
+    
+第三章 语法分析
+------
+
+1. 语法模板概念（简单）
+2. C语法的无限扩展特性以及产生式的概念（复杂）
+3. 左递归的产生及消除
+4. 提取左公因式以提升匹配效率
+5. gcc/c/c_parse.c
+    * c_parser_external_declaration
+    * c_parser_peek_token 在 GCC 实际执行时，词法分析是在语法分析的驱动下进行的，也就是说语法分析什么时候需要下一个符号，就什么时候进行词法分析识别下一个符号。
+6. gcc/c-family/c-lex.c
+    * c_lex_with_flags 调用libcpp/micro.c -> libcpp/lex.c
+7. gcc/c/c_decl.c
