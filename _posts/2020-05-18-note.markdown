@@ -40,6 +40,19 @@ date: 2020-05-18 08:50:15 +0000
 5. gcc/c/c_parse.c
     * c_parser_external_declaration
     * c_parser_peek_token 在 GCC 实际执行时，词法分析是在语法分析的驱动下进行的，也就是说语法分析什么时候需要下一个符号，就什么时候进行词法分析识别下一个符号。
-6. gcc/c-family/c-lex.c
+    * c_parser_declaration_or_fndef 
+    * c_parser_declspecs 分析声明说明符
+    * c_parser_declarator / c_parser_direct_declarator / c_parser_direct_declarator_inner 分析声明符
+    * c_parser_parms_declarator / c_parser_parms_list_declarator 分析函数参数列表
+    * c_parser_parameter_declaration 分析函数参数
+6. gcc/c/c_decl.c
+    * build_null_declspecs 创建声明说明符树节点
+    * finish_declspecs 挂树
+    * build_id_declarator 创建声明符树节点
+    * build_function_declarator 创建函数声明树节点
+    * build_c_param 创建参数声明树节点
+    * push_parm_decl 保存
+    * get_parm_info 重组
+    * start_decl 最后组建
+7. gcc/c-family/c-lex.c
     * c_lex_with_flags 调用libcpp/micro.c -> libcpp/lex.c
-7. gcc/c/c_decl.c
