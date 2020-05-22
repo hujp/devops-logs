@@ -7,9 +7,8 @@ date: 2020-05-20 08:50:15 +0000
 第四章 语法树到目标代码
 ------
 
-* 为了避免为每一种 CPU 去写一套完全独立的后端这种情况以及便于优化，于是在语法树和包含机器特征的目标代码之间建立了一种中间结构，这样就能更方便地将语法树转换为适合不同 CPU 的目标代码。
-* 高端 gimple，低端 gimple，cfg，ssa，RTL 就是这样的中间结构。
-* RTL 数据已经开始体现出硬件平台的相关性。同一段源代码为两种不同硬件平台编译的程序，在低端 gimple 结构中还是一致的，在 RTL 数据中开始出现差别。
+* 为了避免为每一种 CPU 去写一套完全独立的后端这种情况以及便于优化，于是在语法树和包含机器特征的目标代码之间建立了一种中间结构，这样就能更方便地将语法树转换为适合不同 CPU 的目标代码。高端 gimple，低端 gimple，cfg，ssa，RTL 就是这样的中间结构。RTL 数据已经开始体现出硬件平台的相关性。同一段源代码为两种不同硬件平台编译的程序，在低端 gimple 结构中还是一致的，在 RTL 数据中开始出现差别。
+* 高端 gimple 将语法树的二维结构变得趋于一维（如何理解？）。还涉及一些临时变量的保存以及寄存器处理。
 * gcc/cgraphunit.c
     - cgraph_analyze_functions ?
 	- cgraph_analyze_function ?		-> cgraph_node::analyze
@@ -25,3 +24,16 @@ date: 2020-05-20 08:50:15 +0000
 	- gimplify_stmt_list
 	- gimplify_decl_expr
 	- gimplify_modify_expr
+* 高端 gimple 到低端 gimple 主要完成三个合并： 数据合并、代码合并、返回语句合并
+* gcc/gimple-low.c
+    - lower_function_body
+	- lower_gimple_bind
+	- lower_sequence
+	- lower_stmt 				根据高端 gimple 节点的类型进入相应的分支处理，有很多类型是不需要处理的
+	- lower_gimple_return		处理 GIMPLE_RETURN
+* cfg 用于函数内部的控制流优化，比如函数内部有 jmp，那就多分出一个 BB(basic block) 块。 BB 块内的语句都是顺序执行的。
+* gcc/tree-cfg.c
+    - build_gimple_cfg
+	- make_blocks / make_edges
+* ssa 用于数据流优化。具体的是为每个数据增加了版本号字段。
+* RTL 是 GCC 提供的一种中间形式的汇编语言，它与具体的硬件平台是无关的。 RTL 属于后端。
