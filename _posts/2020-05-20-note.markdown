@@ -24,7 +24,7 @@ date: 2020-05-20 08:50:15 +0000
 	- gimplify_stmt_list
 	- gimplify_decl_expr
 	- gimplify_modify_expr
-* 高端 gimple 到低端 gimple 主要完成三个合并： 数据合并、代码合并、返回语句合并
+* 高端 gimple 到低端 gimple 主要完成三个合并： 数据合并、代码合并、返回语句合并。 gimple 的目标是低级控制流（顺序+jump）、简单表达式（ 3 地址）、和简单作用域（局部数据合并到块开头，包括临时变量）
 * gcc/gimple-low.c
     - lower_function_body
 	- lower_gimple_bind
@@ -37,3 +37,24 @@ date: 2020-05-20 08:50:15 +0000
 	- make_blocks / make_edges
 * ssa 用于数据流优化。具体的是为每个数据增加了版本号字段。
 * RTL 是 GCC 提供的一种中间形式的汇编语言，它与具体的硬件平台是无关的。 RTL 属于后端。
+* gcc/cfgexpand.c
+    - expand_one_stack_var_at	内存型变量的转化
+	- set_rtl
+	- expand_one_register_var	寄存器型变量的转化
+* gcc/emit-rtl.c
+    - gen_rtx_MEM				创建内存节点
+* gcc/expr.c
+    - expand_assignment 		语句转化
+* gcc/stmt.c
+* 最终 RTL 在初始 RTL 的基础上，将虚拟机寄存器对应到真实寄存器，并添加函数调用时的保护现场、恢复现场指令。
+* gcc/lra-eliminations.c		与寄存器转换有关
+* gcc/config/i386/i386.c 		与保护现场、恢复现场有关 （**这里已经和硬件平台相关了吧**）
+* 汇编的数据有 3 种，全局数据（静态数据）、函数、和内嵌的汇编代码
+* gcc/cgraphunit.c
+    - output_in_order				源文件到汇编代码的转换入口
+* gcc/varpool.c
+    - varpool_node::assemble_decl	变量节点转换入口，此处比《图解编译原理》中的代码新
+* gcc/varasm.c
+    - assemble_variable				调用其他函数输出一个变量完整的转换结果
+* gcc/final.c
+    - final							调用其他函数输出一个函数完整的转换结果
