@@ -1,0 +1,27 @@
+---
+layout: post
+title:  "深入分析 GCC 读书笔记（1）"
+date: 2020-06-04 08:50:15 +0000   
+---
+
+第 1 章 GCC 概述
+---------------
+
+
+第 2 章 GCC 源代码分析工具
+-------------------------
+
+* GCC 的 Makefile 中默认是有 -g 编译参数的
+
+
+第 3 章 GCC 总体结构
+--------------------
+
+* gcc/gen\*.{c|h} 用来将机器描述文件生成为源代码
+
+第 4 章 从源代码到 AST/GENERIC
+
+* gcc/all-tree.def 这个文件是编译过程中生成的，内容是各个语言的 xx-tree.def
+* 使用 tree_code 索引 tree_code_name 数组可以得到对应的字符串表示；索引 tree_code_class 数组可以得到对应的类型枚举值，再使用这个枚举值索引 tree_code_class_strings 数组即可得到 tree_code 所属类型的字符串表示；索引 tree_code_length 数组可以得到对应的操作数个数。
+* union tree_node 从 tree.h 移动到了 tree-core.h。
+* 
