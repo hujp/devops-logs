@@ -24,7 +24,7 @@ date: 2020-05-20 08:50:15 +0000
 	- gimplify_stmt_list
 	- gimplify_decl_expr
 	- gimplify_modify_expr
-* 高端 gimple 到低端 gimple 主要完成三个合并： 数据合并、代码合并、返回语句合并
+* 高端 gimple 到低端 gimple 主要完成三个合并： 数据合并、代码合并、返回语句合并。 gimple 的目标是低级控制流（顺序+jump）、简单表达式（ 3 地址）、和简单作用域（局部数据合并到块开头，包括临时变量）
 * gcc/gimple-low.c
     - lower_function_body
 	- lower_gimple_bind
