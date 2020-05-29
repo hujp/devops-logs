@@ -20,8 +20,17 @@ date: 2020-06-04 08:50:15 +0000
 * gcc/gen\*.{c|h} 用来将机器描述文件生成为源代码
 
 第 4 章 从源代码到 AST/GENERIC
+-----------------------------
 
 * gcc/all-tree.def 这个文件是编译过程中生成的，内容是各个语言的 xx-tree.def
-* 使用 tree_code 索引 tree_code_name 数组可以得到对应的字符串表示；索引 tree_code_class 数组可以得到对应的类型枚举值，再使用这个枚举值索引 tree_code_class_strings 数组即可得到 tree_code 所属类型的字符串表示；索引 tree_code_length 数组可以得到对应的操作数个数。
+* 使用 tree_code 索引 tree_code_name 数组可以得到对应的字符串表示；
+  索引 tree_code_class 数组可以得到对应的类型枚举值，
+  再使用这个枚举值索引 tree_code_class_strings 数组
+  即可得到 tree_code 所属类型的字符串表示；
+  索引 tree_code_length 数组可以得到对应的操作数个数。
 * union tree_node 从 tree.h 移动到了 tree-core.h。
+* -fdump-tree-original-raw 选项可以打印原始的 AST 树节点信息
+* -fdump-tree-all-graph 选项打印的 xx.dot 文件可使用 dot 命令生成 png 图片
+* 各种树节点包含的子结构体的定义不一定包含在 gcc 目录下，
+  也可能包含在各个库目录下，例如 libcpp
 * 
