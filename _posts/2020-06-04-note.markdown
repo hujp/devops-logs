@@ -22,15 +22,37 @@ date: 2020-06-04 08:50:15 +0000
 第 4 章 从源代码到 AST/GENERIC
 -----------------------------
 
+### 数据结构
+
+层层包含的数据结构原理：
+* tree_base -> tree_common -> 具体的树节点
+* 常量节点(_CST) -> 标识符节点 -> 声明节点(_DECL) -> 类型节点(_TYPE)
+  -> 列表节点 -> 表达式节点(_EXPR，超多！！！) 
+  -> 语句节点(STATEMENT_LIST，双向链表)
+
+具体的实现：
 * gcc/all-tree.def 这个文件是编译过程中生成的，内容是各个语言的 xx-tree.def
+* union tree_node 从 tree.h 移动到了 tree-core.h。
+* 各种树节点包含的子结构体的定义不一定包含在 gcc 目录下，
+  也可能包含在各个库目录下，例如 libcpp
+* 同类型的结构体有的甚至字段也一模一样，之所以这么做应该是为了提高源码的易读性
+
+编程/ API：
 * 使用 tree_code 索引 tree_code_name 数组可以得到对应的字符串表示；
   索引 tree_code_class 数组可以得到对应的类型枚举值，
   再使用这个枚举值索引 tree_code_class_strings 数组
   即可得到 tree_code 所属类型的字符串表示；
   索引 tree_code_length 数组可以得到对应的操作数个数。
-* union tree_node 从 tree.h 移动到了 tree-core.h。
+* 操作树节点一般都有相关的宏/函数可以使用，可以不使用“->”或“.”操作符
+
+调试：
 * -fdump-tree-original-raw 选项可以打印原始的 AST 树节点信息
-* -fdump-tree-all-graph 选项打印的 xx.dot 文件可使用 dot 命令生成 png 图片
-* 各种树节点包含的子结构体的定义不一定包含在 gcc 目录下，
-  也可能包含在各个库目录下，例如 libcpp
-* 
+* -fdump-tree-all-graph 选项打印的 xx.dot 文件可使用 dot 命令生成 png 图片。
+  AST 图中列出的字段并不一定是同一个层级上结构体的成员，而是有助理解的关键字段。
+
+### 算法
+
+最多提前预读两个词法符号的自顶向下的语法推导过程：
+* c-parse.c 从 gcc 目录下移到了 gcc/c 目录
+* c-lex.c 从 gcc 目录下移到了 gcc/c-family 目录
+* gcc/c/c-parse.c::c_lex_one_token
