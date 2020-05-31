@@ -52,7 +52,21 @@ date: 2020-06-04 08:50:15 +0000
 
 ### 算法
 
-最多提前预读两个词法符号的自顶向下的语法推导过程：
-* c-parse.c 从 gcc 目录下移到了 gcc/c 目录
+文件 / 目录
+* c-parser.c 从 gcc 目录下移到了 gcc/c 目录
+* struct c_parser 的定义不在头文件中，而是在 c-parser.c 文件中
 * c-lex.c 从 gcc 目录下移到了 gcc/c-family 目录
-* gcc/c/c-parse.c::c_lex_one_token
+
+最多提前预读两个词法符号的自顶向下的语法推导过程：
+* gcc/c/c-parser.c::c_parse_file
+* gcc/c/c-parser.c::c_parser_peek_token （提取一个缓存的 token）
+* gcc/c/c-parser.c::c_lex_one_token （调用词法分析，后面每次需要的时候都会调用）
+  有的 token 需要创建 AST 节点，有的 token 不需要创建 AST 节点。
+* gcc/c/c-parser.c::c_parser_pragma_pch_preprocess (预处理，可选)
+  以下每个函数都是根据已知条件可能出现的推导式展开的，每一种推导式都有对应的分支。
+  同时展开过程包含直接或间接递归！
+* gcc/c/c-parser.c::c_parser_translation_unit
+* gcc/c/c-parser.c::c_parser_external_declaration (绝大部分文件是该函数处理)
+* gcc/c/c-parser.c::c_parser_declaration_or_fndef
+* ...
+  语法分析过程中会创建更多的 AST 节点，并建立树结构
