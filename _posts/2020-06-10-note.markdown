@@ -7,6 +7,32 @@ date: 2020-06-10 08:50:15 +0000
 第 5 章 从 AST/GENERIC 到 GIMPLE
 --------------------------------
 
+### 数据结构
+
+GIMPLE 数据结构当前版本（11.0.0）与书中版本（4.4）差别比较大，书中的结构类似与上一章 AST，而当前版本则不同。
+
+层层继承的数据结构原理：
+* gimple (内部包含双向链表指针) ，组成的双向链表为 gimple_seq，
+* gimple_statement_with_ops 等具体的数据结构间接或直接继承 gimple，
+* 具体的数据结构只存储第一个操作数（类型为 tree)，但如果有更多的操作数，则连续存储在其后,
+
+具体实现：
+* gimple 等结构体在 gcc/gimple.h 中定义
+* 结构体间的关系可参考 gcc/gimple.def 和 gcc/gsstruct.def
+
+编程 / API:
+* GIMPLE_CODE
+  索引 gimple_code_name 数组得到可打印的 GIMPLE 语句的名字，
+  索引 gss_for_code_ 数组得到 GIMPLE 语句结构体的枚举类型 GSSCODE，
+* GSSCODE
+  索引 gsstruct_code_size 数组得到 GIMPLE 语句结构体的大小，
+  索引 gimple_ops_offset_ 数组得到 GIMPLE 语句第一个操作数对于结构体起始地址的偏移，
+* 操作数个数根据 gimple 结构体中的 subcode 索引 gimple_statement_with_ops 获得，
+* 提供获取操作数指针及地址都有 gimple_ops/gimple_op 等函数
+* 提供操作 gimple_seq 的 gsi_start/gsi_end_p 等迭代器相关函数
+
+### 算法
+
 * gcc/cgraphunit.c::symbol_table::finalize_compilation_unit
   调用 analyze_functions 完成 AST 到 GIMPLE 的转换，
   调用 compile 开启 passes 处理。
