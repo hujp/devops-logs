@@ -33,6 +33,20 @@ GIMPLE 数据结构当前版本（11.0.0）与书中版本（4.4）差别比较�
 
 ### 算法
 
+当前版本（11.0.0）与书中版本（4.4）在进入 GIMPLE 转换前的调用栈有差别，并且伴随着一些
+目录 / 文件位置的变化，可能以前并没有 gcc/c-family 这个目录。当前版本的调用栈简单表述
+如下：
+```
+gcc/toplev.c:compile_file
+    -> gcc/c-family/c-opts.c:c_common_parse_file
+        -> gcc/c/c-parser.c:c_parse_file
+            -> gcc/c-family/c-gimplify.c:c_genericize
+    -> gcc/cgraphunit.c:symtab->finalize_compilation_unit
+        -> analyze_functions
+            -> analyze
+                -> gcc/gimplify.c:gimplify_function_tree
+```
+
 * gcc/cgraphunit.c::symbol_table::finalize_compilation_unit
   调用 analyze_functions 完成 AST 到 GIMPLE 的转换，
   调用 compile 开启 passes 处理。
