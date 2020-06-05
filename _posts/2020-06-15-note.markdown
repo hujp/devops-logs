@@ -1,0 +1,12 @@
+---
+layout: post
+title:  "深入分析 GCC 读书笔记（3）"
+date: 2020-06-15 08:50:15 +0000   
+---
+
+第 6 章 GIMPLE 处理及优化
+--------------------------------
+
+* gcc/cgraphunit.c::symbol_table::finalize_compilation_unit
+  调用 analyze_functions 完成 AST 到 GIMPLE 的转换，
+  调用 compile 开启 passes 处理。

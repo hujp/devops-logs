@@ -47,6 +47,12 @@ gcc/toplev.c:compile_file
                 -> gcc/gimplify.c:gimplify_function_tree
 ```
 
-* gcc/cgraphunit.c::symbol_table::finalize_compilation_unit
-  调用 analyze_functions 完成 AST 到 GIMPLE 的转换，
-  调用 compile 开启 passes 处理。
+* gimplify_function_tree
+  调用 gimplify_body 处理 FUNCTION_DECL 下的 FUNCTION_TYPE 和 BIND_EXPR，
+  ...(gimple 序列处理)
+* gimplify_body
+  1. 调用 gimplify_parameters 转换参数列表，即 FUNCTION_TYPE 子节点。
+  使用宏 DECL_ARGUMENTS 可以从 FUNCTION_DECL 节点获得参数列表子树，
+  此外还有 DECL_CHAIN 等方便操作树节点的宏。
+  另外，FUNCTION_DECL 节点可以利用全局变量 current_function_decl。
+  2. 调用 gimplify_stmt 转换函数体，即 BIND_EXPR 子节点。
