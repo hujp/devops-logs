@@ -47,12 +47,35 @@ gcc/toplev.c:compile_file
                 -> gcc/gimplify.c:gimplify_function_tree
 ```
 
-* gimplify_function_tree
-  调用 gimplify_body 处理 FUNCTION_DECL 下的 FUNCTION_TYPE 和 BIND_EXPR，
-  ...(gimple 序列处理)
-* gimplify_body
+* gimplify_function_tree(fndecl)
+  1. 调用 gimplify_body 处理 FUNCTION_DECL 下的 FUNCTION_TYPE 和 BIND_EXPR，
+  2. ...(gimple 序列处理)
+* gimplify_body(fndecl)
   1. 调用 gimplify_parameters 转换参数列表，即 FUNCTION_TYPE 子节点。
   使用宏 DECL_ARGUMENTS 可以从 FUNCTION_DECL 节点获得参数列表子树，
-  此外还有 DECL_CHAIN 等方便操作树节点的宏。
-  另外，FUNCTION_DECL 节点可以利用全局变量 current_function_decl。
-  2. 调用 gimplify_stmt 转换函数体，即 BIND_EXPR 子节点。
+  此外还有 DECL_CHAIN 等方便操作树节点的宏。另外，FUNCTION_DECL 节点
+  可以利用全局变量 current_function_decl 获取。
+  2. 调用 gimplify_stmt 转换函数体，即 BIND_EXPR 子节点。内部调用 gimplify_expr。
+* gimplify_expr(expr_p)
+  1200+ 行的大函数。注意这个函数有个重载，重载函数增加了一个参数 allow_ssa。
+  expr_p 指向 BIND_EXPR 子节点，宏 DECL_SAVED_TREE(fndecl) 可以取得该子节点。
+  post_p 的引入是为了解决 （*p--)++ 这样的嵌套后副作用问题（how？）。
+  ```
+  do {
+  1. 进行语言相关的 GIMPLE 处理（语言钩子函数）；
+  2. 根据 TREE_CODE 分别转换，包含直接/间接递归调用 gimplify_expr；
+     switch（TREE_CODE（*expr_p) {
+         a. 对特殊的 TREE_CODE 进行处理；
+         b. 对其他表示比较/计算类的 TREE_CODE 进行处理；
+     }
+  3. 判断该节点是否转换完成；
+  } while (该节点的 GIMPLE 转换没有完成)；
+  4. 根据 *expr_p 是否是一个语句和 fallback 参数分为 3 种情况处理表达式值；
+  ```
+
+TODO：gimplify_parameters 参数转换的过程与目标机器支持的应用二进制接口（ABI,Application Binary Interface）中规定的参数传递方式有关。
+* 用到两个数据结构：assign_parm_data_all 和 assign_parm_data_all
+
+TODO：c 和 objc 的 langhooks 定义在 gcc/c/c-objc-common.h 文件中
+* #define LANG_HOOKS_PARSE_FILE c_common_parse_file
+* #define LANG_HOOKS_GIMPLIFY_EXPR c_gimplify_expr
