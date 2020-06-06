@@ -61,16 +61,16 @@ gcc/toplev.c:compile_file
   expr_p 指向 BIND_EXPR 子节点，宏 DECL_SAVED_TREE(fndecl) 可以取得该子节点。
   post_p 的引入是为了解决 （*p--)++ 这样的嵌套后副作用问题（how？）。
   ```
-  do {
-  1. 进行语言相关的 GIMPLE 处理（语言钩子函数）；
-  2. 根据 TREE_CODE 分别转换，包含直接/间接递归调用 gimplify_expr；
-     switch（TREE_CODE（*expr_p) {
-         a. 对特殊的 TREE_CODE 进行处理；
-         b. 对其他表示比较/计算类的 TREE_CODE 进行处理；
-     }
-  3. 判断该节点是否转换完成；
-  } while (该节点的 GIMPLE 转换没有完成)；
-  4. 根据 *expr_p 是否是一个语句和 fallback 参数分为 3 种情况处理表达式值；
+    do {
+    1. 进行语言相关的 GIMPLE 处理（语言钩子函数）；
+    2. 根据 TREE_CODE 分别转换，包含直接/间接递归调用 gimplify_expr；
+         switch（TREE_CODE（*expr_p) {
+          a. 对特殊的 TREE_CODE 进行处理；
+          b. 对其他表示比较/计算类的 TREE_CODE 进行处理；
+        }
+    3. 判断该节点是否转换完成；
+    } while (该节点的 GIMPLE 转换没有完成)；
+    4. 根据 *expr_p 是否是一个语句和 fallback 参数分为 3 种情况处理表达式值；
   ```
 
 TODO：gimplify_parameters 参数转换的过程与目标机器支持的应用二进制接口（ABI,Application Binary Interface）中规定的参数传递方式有关。
