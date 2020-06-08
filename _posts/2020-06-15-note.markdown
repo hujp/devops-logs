@@ -7,6 +7,18 @@ date: 2020-06-15 08:50:15 +0000
 第 6 章 GIMPLE 处理及优化
 --------------------------------
 
+### 数据结构
+
+* struct pass_data -> class opt_pass -> gimple_opt_pass | rtl_opt-pass | ...
+* pass.next 主链表和 pass.sub 子链表
+
+具体实现：
+* gcc/tree-pass.h 结构体及类定义 (之前可能是在 gcc/passes.c 中)
+* gcc/tree-pass.def 在编译时被转换成 gcc/pass-instance.def
+* gcc/pass_manager.h 包含 gcc/pass-instance.def 完成各 PASS 链表的初始化
+
+### 算法
+
 * gcc/cgraphunit.c::symbol_table::finalize_compilation_unit
   调用 analyze_functions 完成 AST 到 GIMPLE 的转换，
   调用 compile 开启 passes 处理。
