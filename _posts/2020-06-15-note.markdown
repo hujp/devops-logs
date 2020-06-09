@@ -14,11 +14,38 @@ date: 2020-06-15 08:50:15 +0000
 
 具体实现：
 * gcc/tree-pass.h 结构体及类定义 (之前可能是在 gcc/passes.c 中)
-* gcc/tree-pass.def 在编译时被转换成 gcc/pass-instance.def
-* gcc/pass_manager.h 包含 gcc/pass-instance.def 完成各 PASS 链表的初始化
+* gcc/passes.def 在编译时被转换成 gcc/pass-instance.def
+* gcc/pass_manager.h 包含 gcc/pass-instance.def 完成各 PASS 的定义
+* gcc/passes.c 包含 gcc/pass-instance.def 完成初始化和链表构建
+  - pass_lists 数组，元素是各个 pass 链表
+  - all_lowering_passes 链表
+  - all_small_ipa_passes 链表
+  - all_regular_ipa_passes 链表
+  - all_late_ipa_passes 链表
+  - all_passes 链表
+
 
 ### 算法
 
+pass_manager 初始化函数的调用栈
+
+```
+(gdb) bt
+#0  gcc::pass_manager::pass_manager (this=0x26b31f0, ctxt=0x2691480) at ../../gcc-master/gcc/passes.c:1519
+#1  0x00000000007bbd3d in general_init (init_signals=<optimized out>, argv0=<optimized out>) at ../../gcc-master/gcc/toplev.c:1250
+#2  toplev::main (this=this@entry=0x7fffffffe2be, argc=<optimized out>, argc@entry=2, argv=<optimized out>, argv@entry=0x7fffffffe3b8) at ../../gcc-master/gcc/toplev.c:2365
+#3  0x00000000007bfdef in main (argc=2, argv=0x7fffffffe3b8) at ../../gcc-master/gcc/main.c:39
+```
+
+general_init 函数不只是初始化 pass_manager，可以说是整个 gcc 编译过程的初始化。
+所以这个函数在语法检查之前，甚至是在 lang_hooks 初始化之前就被执行了。
+
 * gcc/cgraphunit.c::symbol_table::finalize_compilation_unit
-  调用 analyze_functions 完成 AST 到 GIMPLE 的转换，
-  调用 compile 开启 passes 处理。
+  调用 analyze_functions 完成 AST 到 GIMPLE 的转换，开启 all_lowering_passes，
+  调用 compile 开启优化 passes 处理。
+
+可以像下面这样打断点调试 pass 链表：
+```
+(gdb) b execute_pass_list if pass == g.m_passes.all_lowering_passes
+Breakpoint 3 at 0x6a3207: execute_pass_list. (2 locations)
+```
