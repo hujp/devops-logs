@@ -49,3 +49,6 @@ general_init 函数不只是初始化 pass_manager，可以说是整个 gcc 编�
 (gdb) b execute_pass_list if pass == g.m_passes.all_lowering_passes
 Breakpoint 3 at 0x6a3207: execute_pass_list. (2 locations)
 ```
+
+* pass_remove_use_less_stmts 这个名字已经在 2009 年的时候从 tree-cfg.c 文件中删除了。
+  不过，相应的功能应该是转移到其他 PASS 中了。
