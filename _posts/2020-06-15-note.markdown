@@ -27,6 +27,8 @@ date: 2020-06-15 08:50:15 +0000
 
 ### 算法
 
+#### 初始化
+
 pass_manager 初始化函数的调用栈
 
 ```
@@ -40,15 +42,70 @@ pass_manager 初始化函数的调用栈
 general_init 函数不只是初始化 pass_manager，可以说是整个 gcc 编译过程的初始化。
 所以这个函数在语法检查之前，甚至是在 lang_hooks 初始化之前就被执行了。
 
-* gcc/cgraphunit.c::symbol_table::finalize_compilation_unit
-  调用 analyze_functions 完成 AST 到 GIMPLE 的转换，开启 all_lowering_passes，
-  调用 compile 开启优化 passes 处理。
+```
+(gdb) bt
+#0  make_pass_warn_unused_result (ctxt=0x2691480) at ../../gcc-master/gcc/tree-cfg.c:9555
+#1  0x0000000000cc7912 in gcc::pass_manager::pass_manager (this=0x26b31f0, ctxt=<optimized out>) at ./pass-instances.def:36
+#2  0x00000000007bbd3d in general_init (init_signals=<optimized out>, argv0=<optimized out>) at ../../gcc-master/gcc/toplev.c:1250
+#3  toplev::main (this=this@entry=0x7fffffffe2ce, argc=<optimized out>, argc@entry=2, argv=<optimized out>, argv@entry=0x7fffffffe3c8) at ../../gcc-master/gcc/toplev.c:2365
+#4  0x00000000007bfdef in main (argc=2, argv=0x7fffffffe3c8) at ../../gcc-master/gcc/main.c:39
+```
+
+gcc/passes.def 中描述的是各个 PASS 的名字，至于各个 PASS 实际的执行函数，
+是在 gcc/passes.c 中的宏定义 NEXT_PASS 里执行 make_<pass_name> 函数进行“绑定”的。
+而 make_<pass_name> 函数和实际的执行函数分散在其他的文件中。例如 make_pass_lower_cf
+绑定的是 lower_function_body，这两个函数都位于 gcc/gimple-low.c 文件中。
+```
+#define NEXT_PASS(PASS, NUM) \
+  do { \
+    gcc_assert (PASS ## _ ## NUM == NULL); \
+    if ((NUM) == 1)                              \
+      PASS ## _1 = make_##PASS (m_ctxt);          \
+    else                                         \
+      {                                          \
+        gcc_assert (PASS ## _1);                 \
+        PASS ## _ ## NUM = PASS ## _1->clone (); \
+      }                                          \
+    p = next_pass_1 (p, PASS ## _ ## NUM, PASS ## _1);  \
+  } while (0)
+```
+gcc/tree-pass.h 中有各个 make_<pass_name> 函数的集中声明，可以从这里跳转到函数定义。
+
+#### PASS 执行
 
 可以像下面这样打断点调试 pass 链表：
 ```
 (gdb) b execute_pass_list if pass == g.m_passes.all_lowering_passes
 Breakpoint 3 at 0x6a3207: execute_pass_list. (2 locations)
+(gdb) bt
+#0  execute_pass_list (fn=0x7ffff6d06000, pass=0x2692830) at ../../gcc-master/gcc/passes.c:2599
+#1  0x000000000094e1eb in cgraph_node::analyze (this=0x7ffff6cd2438) at ../../gcc-master/gcc/context.h:48
+#2  0x0000000000950f98 in analyze_functions (first_time=<optimized out>) at ../../gcc-master/gcc/cgraphunit.c:1231
+#3  0x0000000000951b63 in symbol_table::finalize_compilation_unit (this=0x7ffff6b7b100) at ../../gcc-master/gcc/cgraphunit.c:2975
+#4  0x0000000000d9b43f in compile_file () at ../../gcc-master/gcc/toplev.c:483
+#5  0x00000000007bc2cc in do_compile () at ../../gcc-master/gcc/toplev.c:2276
+#6  toplev::main (this=this@entry=0x7fffffffe2ce, argc=<optimized out>, argc@entry=2, argv=<optimized out>, argv@entry=0x7fffffffe3c8) at ../../gcc-master/gcc/toplev.c:2415
+#7  0x00000000007bfdef in main (argc=2, argv=0x7fffffffe3c8) at ../../gcc-master/gcc/main.c:39
+(gdb) b execute_pass_list if pass == g.m_passes.all_passes
+(gdb) bt
+#0  execute_pass_list (fn=0x7ffff6d06000, pass=0x26b65d0) at ../../gcc-master/gcc/passes.c:2599
+#1  0x000000000094e65c in cgraph_node::expand (this=0x7ffff6cd2438) at ../../gcc-master/gcc/context.h:48
+#2  0x000000000094f8b4 in output_in_order () at ../../gcc-master/gcc/cgraphunit.c:2579
+#3  symbol_table::compile (this=0x7ffff6b7b100) at ../../gcc-master/gcc/cgraphunit.c:2820
+#4  0x0000000000951bdd in symbol_table::compile (this=0x7ffff6b7b100) at ../../gcc-master/gcc/cgraphunit.c:3003
+#5  symbol_table::finalize_compilation_unit (this=0x7ffff6b7b100) at ../../gcc-master/gcc/cgraphunit.c:3003
+#6  0x0000000000d9b43f in compile_file () at ../../gcc-master/gcc/toplev.c:483
+#7  0x00000000007bc2cc in do_compile () at ../../gcc-master/gcc/toplev.c:2276
+#8  toplev::main (this=this@entry=0x7fffffffe2ce, argc=<optimized out>, argc@entry=2, argv=<optimized out>, argv@entry=0x7fffffffe3c8) at ../../gcc-master/gcc/toplev.c:2415
+#9  0x00000000007bfdef in main (argc=2, argv=0x7fffffffe3c8) at ../../gcc-master/gcc/main.c:39
 ```
+
+* gcc/cgraphunit.c::symbol_table::finalize_compilation_unit
+  - 调用 analyze_functions 完成 AST 到 GIMPLE 的转换，开启 all_lowering_passes，
+  - 调用 compile 开启优化 passes 处理。
+
+
+#### 其他
 
 * pass_remove_use_less_stmts 这个名字已经在 2009 年的时候从 tree-cfg.c 文件中删除了。
   不过，相应的功能应该是转移到其他 PASS 中了。
