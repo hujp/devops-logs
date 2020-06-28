@@ -9,7 +9,7 @@ date: 2020-06-15 08:50:15 +0000
 
 ### 数据结构
 
-* struct pass_data -> class opt_pass -> gimple_opt_pass | rtl_opt-pass | ...
+* struct pass_data -> class opt_pass -> gimple_opt_pass / rtl_opt-pass / ...
 * pass.next 主链表和 pass.sub 子链表
 
 具体实现：
