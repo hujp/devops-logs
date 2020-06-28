@@ -29,8 +29,6 @@ date: 2020-06-15 08:50:15 +0000
 
 #### 初始化
 
-pass_manager 初始化函数的调用栈
-
 ```
 (gdb) bt
 #0  gcc::pass_manager::pass_manager (this=0x26b31f0, ctxt=0x2691480) at ../../gcc-master/gcc/passes.c:1519
@@ -39,6 +37,7 @@ pass_manager 初始化函数的调用栈
 #3  0x00000000007bfdef in main (argc=2, argv=0x7fffffffe3b8) at ../../gcc-master/gcc/main.c:39
 ```
 
+以上是 pass_manager 初始化函数的调用栈。
 general_init 函数不只是初始化 pass_manager，可以说是整个 gcc 编译过程的初始化。
 所以这个函数在语法检查之前，甚至是在 lang_hooks 初始化之前就被执行了。
 
@@ -51,10 +50,13 @@ general_init 函数不只是初始化 pass_manager，可以说是整个 gcc 编�
 #4  0x00000000007bfdef in main (argc=2, argv=0x7fffffffe3c8) at ../../gcc-master/gcc/main.c:39
 ```
 
+以上是 pass_warn_unused_result 的初始化函数的调用栈。
 gcc/passes.def 中描述的是各个 PASS 的名字，至于各个 PASS 实际的执行函数，
 是在 gcc/passes.c 中的宏定义 NEXT_PASS 里执行 make_<pass_name> 函数进行“绑定”的。
 而 make_<pass_name> 函数和实际的执行函数分散在其他的文件中。例如 make_pass_lower_cf
 绑定的是 lower_function_body，这两个函数都位于 gcc/gimple-low.c 文件中。
+gcc/tree-pass.h 中有各个 make_<pass_name> 函数的集中声明，可以从这里跳转到函数定义。
+
 ```
 #define NEXT_PASS(PASS, NUM) \
   do { \
@@ -69,11 +71,11 @@ gcc/passes.def 中描述的是各个 PASS 的名字，至于各个 PASS 实际�
     p = next_pass_1 (p, PASS ## _ ## NUM, PASS ## _1);  \
   } while (0)
 ```
-gcc/tree-pass.h 中有各个 make_<pass_name> 函数的集中声明，可以从这里跳转到函数定义。
+
+以上是 gcc/passes.c 中的 NEXT_PASS 宏定义。
 
 #### PASS 执行
 
-可以像下面这样打断点调试 pass 链表：
 ```
 (gdb) b execute_pass_list if pass == g.m_passes.all_lowering_passes
 Breakpoint 3 at 0x6a3207: execute_pass_list. (2 locations)
@@ -100,12 +102,7 @@ Breakpoint 3 at 0x6a3207: execute_pass_list. (2 locations)
 #9  0x00000000007bfdef in main (argc=2, argv=0x7fffffffe3c8) at ../../gcc-master/gcc/main.c:39
 ```
 
+可以像上面这样打断点调试 pass 链表：
 * gcc/cgraphunit.c::symbol_table::finalize_compilation_unit
   - 调用 analyze_functions 完成 AST 到 GIMPLE 的转换，开启 all_lowering_passes，
   - 调用 compile 开启优化 passes 处理。
-
-
-#### 其他
-
-* pass_remove_use_less_stmts 这个名字已经在 2009 年的时候从 tree-cfg.c 文件中删除了。
-  不过，相应的功能应该是转移到其他 PASS 中了。

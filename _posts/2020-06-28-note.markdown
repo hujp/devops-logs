@@ -1,0 +1,27 @@
+---
+layout: post
+title:  "深入分析 GCC 读书笔记（4）"
+date: 2020-06-28 08:50:15 +0000   
+---
+
+第 6 章 GIMPLE 处理及优化
+--------------------------------
+
+### PASS 分析
+
+#### pass_remove_use_less_stmts
+
+* pass_remove_use_less_stmts 这个名字已经在 2009 年的时候从 tree-cfg.c 文件中删除了。
+  不过，相应的功能应该是转移到其他 PASS 中了。
+
+#### pass_lower_cf
+
+TODO
+
+#### pass_build_cfg
+
+TODO
+
+#### pass_build_cgraph_edges
+
+TODO
