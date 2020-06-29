@@ -9,6 +9,8 @@ date: 2020-06-28 08:50:15 +0000
 
 ### PASS 分析
 
+单纯来看每个 PASS 的实现过程，有的还是比较容易理解的。但是，各种转换背后的动机是什么？
+
 #### pass_remove_use_less_stmts
 
 * pass_remove_use_less_stmts 这个名字已经在 2009 年的时候从 tree-cfg.c 文件中删除了。
@@ -16,12 +18,29 @@ date: 2020-06-28 08:50:15 +0000
 
 #### pass_lower_cf
 
-TODO
+TODO 为什么要这么转换？
 
 #### pass_build_cfg
 
-TODO
+TODO 为什么要这么转换？
 
 #### pass_build_cgraph_edges
 
+* 记录/构建函数调用关系数据结构的作用是？
+
 TODO
+
+#### pass_build_ssa
+
+SSA(Static Single Asignment)，即每个变量只能被赋值一次。
+
+TODO 为什么要这么转换？
+
+#### pass_all_optimations
+
+这个 PASS 包含很多的子 PASS。该 PASS 本身位于 all_passes 链的前端，属于基于 GIMPLE
+的优化。
+
+#### pass_expand
+
+这个 PASS 将 GIMPLE 中间表示转换成 RTL，所以其后的 PASS 都属于基于 RTL 的优化。
