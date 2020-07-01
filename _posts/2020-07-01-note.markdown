@@ -1,0 +1,19 @@
+---
+layout: post
+title:  "深入分析 GCC 读书笔记（5）"
+date: 2020-07-01 08:50:15 +0000   
+---
+
+第 7 章 RTL
+-----------
+
+一个 RTL 表达式称为 RTX。GCC 支持的 RTX 定义在 gcc/rtl.def。RTL 可以用来进行机器描述，
+也可以描述由 GIMPLE 形式转换而来的程序代码信息。GCC 中描述程序代码信息的 RTL 被称为
+insn，包括：
+* INSN        无跳转非函数调用指令
+* JUMP_INSN   跳转指令、包含标签引用的表达式、函数返回
+* CALL_INSN   函数调用指令
+* BARRIER     表示指令流无法达到的位置。例如：放在无条件转移之后，或 exit 调用之后
+* CODE_LABEL  表示 JUMP_INSN 可以跳转到的标签
+* NOTE        表示调试信息或其他标记信息
+
