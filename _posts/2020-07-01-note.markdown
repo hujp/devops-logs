@@ -17,3 +17,36 @@ insn，包括：
 * CODE_LABEL  表示 JUMP_INSN 可以跳转到的标签
 * NOTE        表示调试信息或其他标记信息
 
+-fdump-rtl-all 选项可以采集 RTL 中间表示，对应的采集结果文件是 xxx.nnnr.expand。
+
+第 8 章 机器描述文件
+------------------
+
+基于 RTL 语言的机器描述是 GCC 支持多目标机器的基础。 GCC 用来进行机器描述的 RTX 主要
+包括：
+* 指令模板定义
+  - DEFINE_INSN
+  - DEFINE_EXPAND
+  - DEFINE_SPLIT
+  - DEFINE_INSN_AND_SPLIT
+* 常量定义
+  - DEFINE_CONSTANTS
+* 属性定义
+  - DEFINE_ATTR
+  - DEFINE_MODE_ATTR
+* 断言定义
+  - DEFINE_PREDICATE
+* 约束定义
+  - DEFINE_CONSTRAINT
+  - DEFINE_REGISTER_CONSTRAINT
+* 枚举器定义
+  - DEFINE_CODE_ITERATOR
+  - DEFINE_MODE_ITERATOR
+* 流水线定义
+  - DEFINE_INSN_RESERVATION
+  - DEFINE_RESERVATION
+  - DEFINE_CPU_UNIT
+  - DEFINE_AUTOMATON
+* 窥孔优化定义
+  - DEFINE_PEEPHOLE
+  - DEFINE_PEEPHOLE2
