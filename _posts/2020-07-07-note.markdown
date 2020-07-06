@@ -1,0 +1,18 @@
+---
+layout: post
+title:  "深入分析 GCC 读书笔记（6）"
+date: 2020-07-01 08:50:15 +0000   
+---
+
+第 9 章 机器描述文件${target}.[ch]
+---------------------------------
+
+gcc/config/${target}/${target}.c 中会对 gcc_target 结构体进行初始化。
+
+```
+struct gcc_target targetm = TARGET_INITIALIZER;
+```
+
+TARGET_INITIALIZER 宏是一个包含很多小宏的大宏，GCC 为每一个小宏提供了默认的实现，
+而具体的目标机器实现时可以覆盖默认的小宏，然后再像上面这样调用 TARGET_INITIALIZER。
+如此设计的目的是方便 GCC 添加目标机器的共通定义而不需要修改每一种实现。
