@@ -44,3 +44,10 @@ OPTION_DEFAULT_SPECS 提供，在 gcc/gcc.c 中被添加到 option_default_specs
 
 ### 存储布局
 
+gcc/config/aarch64/aarch64.h 文件中定义了存储顺序、字宽度、存储对齐、数据类型宽度。
+
+### 寄存器
+
+gcc/config/aarch64/aarch64.h 文件中定义了 FIRST_PSEUDO_REGISTER，而该定义用到了
+FFRT_REGNUM，FFRT_REGNUM 是由 aarch64.md 定义的常量，经过编译之后生成在
+gcc/insn_constants.h 中，值为 85。
