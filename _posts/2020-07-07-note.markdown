@@ -20,7 +20,8 @@ TARGET_INITIALIZER 宏是一个包含很多小宏的大宏，GCC 为每一个小
 如此设计的目的是方便 GCC 添加目标机器的共通定义而不需要修改每一种实现。
 
 * gcc/target.def
-  TARGET_INITIALIZER 宏定义，这里还包含各个宏的用法说明
+  TARGET_INITIALIZER 宏定义，这里还包含各个宏的用法说明。
+  这里也是 gcc_target 结构体定义的地方。各个宏的第一个参数给出了成员的名字。
 * gcc/target-hooks-def.h
   这个文件是编译的时候生成的，是 TARGET_INITIALIZER 包含的小宏的默认定义
 
