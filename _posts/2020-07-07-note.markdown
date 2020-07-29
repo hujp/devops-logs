@@ -61,6 +61,47 @@ gcc/config/aarch64/aarch64.h 文件中定义了存储顺序、字宽度、存储
 
 ### 寄存器
 
-gcc/config/aarch64/aarch64.h 文件中定义了 FIRST_PSEUDO_REGISTER，而该定义用到了
-FFRT_REGNUM，FFRT_REGNUM 是由 aarch64.md 定义的常量，经过编译之后生成在
-gcc/insn_constants.h 中，值为 85。
+#### 宏定义
+
+以 aarch64 为例，gcc/config/aarch64/aarch64.h 文件中定义了 FIRST_PSEUDO_REGISTER，
+而该定义用到了 FFRT_REGNUM，FFRT_REGNUM 是由 aarch64.md 定义的常量，经过编译之后生成
+在 gcc/insn_constants.h 中，值为 85。
+
+#### 初始化
+
+1. 使用 initial_fixed_regs 初始化 fixed_regs
+
+```
+#0  init_reg_sets () at ../../gcc-a64fx-1-b/gcc/reginfo.c:151
+#1  0x0000000000668a4c in general_init (init_signals=true, argv0=<optimized out>) at ../../gcc-a64fx-1-b/gcc/toplev.c:1239
+#2  toplev::main (this=this@entry=0xfffffffff218, argc=<optimized out>, argc@entry=2, argv=<optimized out>, argv@entry=0xfffffffff368)
+    at ../../gcc-a64fx-1-b/gcc/toplev.c:2396
+#3  0x000000000066aa94 in main (argc=2, argv=0xfffffffff368) at ../../gcc-a64fx-1-b/gcc/main.c:39
+```
+
+寄存器初始化涉及几个数组：
+* fixed_regs 和 initial_fixed_regs
+* call_used_regs 和 initial_call_used_regs
+* reg_names 和 initial_reg_names
+
+以 fixed_regs 为例，fixed_regs 是 hard-reg-set.h 中定义的宏，实际指向的是 reginfo.c
+中定义的全局变量 default_target_hard_regs（这个结构体是之后编译过程中用到寄存器信息的
+时候实际使用的）中的 x_fixed_regs。而 initial_fixed_regs 是 reginfo.c 中定义的全局
+变量，使用各 target 提供的 FIXED_REGISTERS 宏初始化。
+
+2. 使用 TARGET_CONDITIONAL_REGISTER_USAGE 校正各寄存器数组
+
+```
+#0  aarch64_conditional_register_usage () at ../../gcc-a64fx-1-b/gcc/config/aarch64/aarch64.c:16667
+#1  0x0000000000c677cc in init_reg_sets_1 () at ../../gcc-a64fx-1-b/gcc/reginfo.c:238
+#2  0x0000000000c680e8 in init_regs () at ../../gcc-a64fx-1-b/gcc/reginfo.c:470
+#3  0x0000000000669a28 in backend_init () at ../../gcc-a64fx-1-b/gcc/toplev.c:1935
+#4  do_compile () at ../../gcc-a64fx-1-b/gcc/toplev.c:2289
+#5  toplev::main (this=this@entry=0xfffffffff1f8, argc=<optimized out>, argc@entry=4, argv=<optimized out>, argv@entry=0xfffffffff348)
+    at ../../gcc-a64fx-1-b/gcc/toplev.c:2446
+#6  0x000000000066aa94 in main (argc=4, argv=0xfffffffff348) at ../../gcc-a64fx-1-b/gcc/main.c:39
+```
+
+编译阶段在 init_reg_sets_1 函数中调用 targetm.conditional_register_usage 钩子函数
+来根据各个 target 的实现校正各寄存器数组。以 aarch64 为例，这个钩子函数是由
+TARGET_CONDITIONAL_REGISTER_USAGE 定义的。
