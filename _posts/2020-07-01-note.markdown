@@ -7,9 +7,53 @@ date: 2020-07-01 08:50:15 +0000
 第 7 章 RTL
 -----------
 
-一个 RTL 表达式称为 RTX。GCC 支持的 RTX 定义在 gcc/rtl.def。RTL 可以用来进行机器描述，
-也可以描述由 GIMPLE 形式转换而来的程序代码信息。GCC 中描述程序代码信息的 RTL 被称为
-insn，包括：
+RTL 包括 5 中对象类型：
+* 表达式
+* 整型
+* 宽整型
+* 字符串
+* 向量
+
+其中 RTL 表达式是最重要的一种类型。一个 RTL 表达式称为 RTX。GCC 支持的 RTX 定义在
+gcc/rtl.def。GCC 对 RTX 进行了分类，RTX 分类可以表示一个 RTX 是代表一个对象，还是
+一个运算，亦或是代表一条指令等等。可以通过宏 GET_RTX_CLASS 获取 RTX 的分类。RTX
+分类包括：
+
+```
+   RTX_CONST_OBJ
+       an rtx code that can be used to represent a constant object
+       (e.g, CONST_INT)
+   RTX_OBJ
+       an rtx code that can be used to represent an object (e.g, REG, MEM)
+   RTX_COMPARE
+       an rtx code for a comparison (e.g, LT, GT)
+   RTX_COMM_COMPARE
+       an rtx code for a commutative comparison (e.g, EQ, NE, ORDERED)
+   RTX_UNARY
+       an rtx code for a unary arithmetic expression (e.g, NEG, NOT)
+   RTX_COMM_ARITH
+       an rtx code for a commutative binary operation (e.g,, PLUS, MULT)
+   RTX_TERNARY
+       an rtx code for a non-bitfield three input operation (IF_THEN_ELSE)
+   RTX_BIN_ARITH
+       an rtx code for a non-commutative binary operation (e.g., MINUS, DIV)
+   RTX_BITFIELD_OPS
+       an rtx code for a bit-field operation (ZERO_EXTRACT, SIGN_EXTRACT)
+   RTX_INSN
+       an rtx code for a machine insn (INSN, JUMP_INSN, CALL_INSN) or
+       data that will be output as assembly pseudo-ops (DEBUG_INSN)
+   RTX_MATCH
+       an rtx code for something that matches in insns (e.g, MATCH_DUP)
+   RTX_AUTOINC
+       an rtx code for autoincrement addressing modes (e.g. POST_DEC)
+   RTX_EXTRA
+       everything else
+```
+
+RTX_OBJ 类的 RTX 主要包括如下：
+* MEM 表示一个内存位置，操作数是内存地址
+
+RTL 可以用来进行机器描述，也可以描述由 GIMPLE 形式转换而来的程序代码信息。GCC 中描述程序代码信息的 RTL 被称为 insn（属于分类 RTX_INSN 或者 RTX_EXTRA)，包括：
 * INSN        无跳转非函数调用指令
 * JUMP_INSN   跳转指令、包含标签引用的表达式、函数返回
 * CALL_INSN   函数调用指令
