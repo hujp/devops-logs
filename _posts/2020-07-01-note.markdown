@@ -52,6 +52,8 @@ gcc/rtl.def。GCC 对 RTX 进行了分类，RTX 分类可以表示一个 RTX 是
 
 RTX_OBJ 类的 RTX 主要包括如下：
 * MEM 表示一个内存位置，操作数是内存地址
+* REG 表示一个寄存器，操作数是寄存器代号
+* SUBREG 表示是一个寄存器的一部分，操作数是寄存器代号和偏移
 
 RTL 可以用来进行机器描述，也可以描述由 GIMPLE 形式转换而来的程序代码信息。GCC 中描述程序代码信息的 RTL 被称为 insn（属于分类 RTX_INSN 或者 RTX_EXTRA)，包括：
 * INSN        无跳转非函数调用指令
