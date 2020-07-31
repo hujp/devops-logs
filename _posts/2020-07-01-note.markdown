@@ -14,7 +14,9 @@ RTL 包括 5 中对象类型：
 * 字符串
 * 向量
 
-其中 RTL 表达式是最重要的一种类型。一个 RTL 表达式称为 RTX。GCC 支持的 RTX 定义在
+其中 RTL 表达式所使用的操作数也是以上 5 中类型。
+
+RTL 表达式是最重要的一种类型。一个 RTL 表达式称为 RTX。GCC 支持的 RTX 定义在
 gcc/rtl.def。GCC 对 RTX 进行了分类，RTX 分类可以表示一个 RTX 是代表一个对象，还是
 一个运算，亦或是代表一条指令等等。可以通过宏 GET_RTX_CLASS 获取 RTX 的分类。RTX
 分类包括：
@@ -55,13 +57,18 @@ RTX_OBJ 类的 RTX 主要包括如下：
 * REG 表示一个寄存器，操作数是寄存器代号
 * SUBREG 表示是一个寄存器的一部分，操作数是寄存器代号和偏移
 
-RTL 可以用来进行机器描述，也可以描述由 GIMPLE 形式转换而来的程序代码信息。GCC 中描述程序代码信息的 RTL 被称为 insn（属于分类 RTX_INSN 或者 RTX_EXTRA)，包括：
+RTX 可以用来进行机器描述，也可以描述由 GIMPLE 形式转换而来的程序代码信息。GCC 中描述程序代码信息的 RTX 被称为 insn（属于分类 RTX_INSN 或者 RTX_EXTRA)，包括：
 * INSN        无跳转非函数调用指令
 * JUMP_INSN   跳转指令、包含标签引用的表达式、函数返回
 * CALL_INSN   函数调用指令
 * BARRIER     表示指令流无法达到的位置。例如：放在无条件转移之后，或 exit 调用之后
 * CODE_LABEL  表示 JUMP_INSN 可以跳转到的标签
 * NOTE        表示调试信息或其他标记信息
+
+用于机器描述的 RTX 被称为 MD-RTL（属于分类 RTX_EXTRA 或者 RTX_MATCH)，主要包括：
+* DEFINE_*    例如 DEFINE_INSN/DEFINE_EXPAND/DEFINE_INSN_RESERVATION
+* ADDRESS
+* MATCH_*     例如 MATCH_OPERAND
 
 -fdump-rtl-all 选项可以采集 RTL 中间表示，对应的采集结果文件是 xxx.nnnr.expand。
 
