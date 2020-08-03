@@ -106,3 +106,85 @@ Breakpoint 3 at 0x6a3207: execute_pass_list. (2 locations)
 * gcc/cgraphunit.c::symbol_table::finalize_compilation_unit
   - 调用 analyze_functions 完成 AST 到 GIMPLE 的转换，开启 all_lowering_passes，
   - 调用 compile 开启优化 passes 处理。
+
+全部 PASS 链表的调用栈情况，按调用先后顺序如下。
+
+第一次：
+
+```
+(gdb) bt
+#0  execute_pass_list (fn=0xffffaf560000, pass=0x2dbc390) at ../../gcc-debug/gcc/passes.c:2607
+#1  0x0000000000c43aec in cgraph_node::analyze (this=0xffffaf510708) at ../../gcc-debug/gcc/cgraphunit.c:682
+#2  0x0000000000c45d58 in analyze_functions (first_time=true) at ../../gcc-debug/gcc/cgraphunit.c:1231
+#3  0x0000000000c4b200 in symbol_table::finalize_compilation_unit (this=0xffffaf230000) at ../../gcc-debug/gcc/cgraphunit.c:2975
+#4  0x00000000012f6d4c in compile_file () at ../../gcc-debug/gcc/toplev.c:483
+#5  0x00000000012fb01c in do_compile () at ../../gcc-debug/gcc/toplev.c:2307
+#6  0x00000000012fb3f0 in toplev::main (this=0xfffffffff188, argc=2, argv=0xfffffffff2d8) at ../../gcc-debug/gcc/toplev.c:2446
+#7  0x00000000022e5ccc in main (argc=2, argv=0xfffffffff2d8) at ../../gcc-debug/gcc/main.c:39
+(gdb) p pass==g.m_passes.all_lowering_passes
+$3 = true
+```
+
+第二次：
+
+```
+#0  execute_pass_list (fn=0xffffaf560000, pass=0x2dbcac0) at ../../gcc-debug/gcc/passes.c:2607
+#1  0x000000000119854c in do_per_function_toporder (callback=0x119abe0 <execute_pass_list(function*, opt_pass*)>, data=0x2dbcac0)
+    at ../../gcc-debug/gcc/passes.c:1726
+#2  0x000000000119ba60 in execute_ipa_pass_list (pass=0x2dbca60) at ../../gcc-debug/gcc/passes.c:2941
+#3  0x0000000000c4a664 in ipa_passes () at ../../gcc-debug/gcc/cgraphunit.c:2621
+#4  0x0000000000c4abd8 in symbol_table::compile (this=0xffffaf230000) at ../../gcc-debug/gcc/cgraphunit.c:2756
+#5  0x0000000000c4b2f0 in symbol_table::finalize_compilation_unit (this=0xffffaf230000) at ../../gcc-debug/gcc/cgraphunit.c:3003
+#6  0x00000000012f6d4c in compile_file () at ../../gcc-debug/gcc/toplev.c:483
+#7  0x00000000012fb01c in do_compile () at ../../gcc-debug/gcc/toplev.c:2307
+#8  0x00000000012fb3f0 in toplev::main (this=0xfffffffff188, argc=2, argv=0xfffffffff2d8) at ../../gcc-debug/gcc/toplev.c:2446
+#9  0x00000000022e5ccc in main (argc=2, argv=0xfffffffff2d8) at ../../gcc-debug/gcc/main.c:39
+(gdb) p pass==g.m_passes.all_small_ipa_passes
+$4 = false
+(gdb) p pass==g.m_passes.all_regular_ipa_passes
+$5 = false
+(gdb) p pass==g.m_passes.all_late_ipa_passes
+$6 = false
+(gdb) p pass==g.m_passes.all_passes
+$7 = false
+```
+
+第三次：
+
+```
+#0  execute_pass_list (fn=0xffffaf560000, pass=0x2dbcdc0) at ../../gcc-debug/gcc/passes.c:2607
+#1  0x000000000119854c in do_per_function_toporder (callback=0x119abe0 <execute_pass_list(function*, opt_pass*)>, data=0x2dbcdc0)
+    at ../../gcc-debug/gcc/passes.c:1726
+#2  0x000000000119ba60 in execute_ipa_pass_list (pass=0x2dbcd60) at ../../gcc-debug/gcc/passes.c:2941
+#3  0x0000000000c4a664 in ipa_passes () at ../../gcc-debug/gcc/cgraphunit.c:2621
+#4  0x0000000000c4abd8 in symbol_table::compile (this=0xffffaf230000) at ../../gcc-debug/gcc/cgraphunit.c:2756
+#5  0x0000000000c4b2f0 in symbol_table::finalize_compilation_unit (this=0xffffaf230000) at ../../gcc-debug/gcc/cgraphunit.c:3003
+#6  0x00000000012f6d4c in compile_file () at ../../gcc-debug/gcc/toplev.c:483
+#7  0x00000000012fb01c in do_compile () at ../../gcc-debug/gcc/toplev.c:2307
+#8  0x00000000012fb3f0 in toplev::main (this=0xfffffffff188, argc=2, argv=0xfffffffff2d8) at ../../gcc-debug/gcc/toplev.c:2446
+#9  0x00000000022e5ccc in main (argc=2, argv=0xfffffffff2d8) at ../../gcc-debug/gcc/main.c:39
+(gdb) p pass==g.m_passes.all_small_ipa_passes
+$8 = false
+(gdb) p pass==g.m_passes.all_regular_ipa_passes
+$9 = false
+(gdb) p pass==g.m_passes.all_late_ipa_passes
+$10 = false
+(gdb) p pass==g.m_passes.all_passes
+$11 = false
+```
+
+第四次：
+
+```
+#0  execute_pass_list (fn=0xffffaf560000, pass=0x2dbed40) at ../../gcc-debug/gcc/passes.c:2607
+#1  0x0000000000c497c4 in cgraph_node::expand (this=0xffffaf510708) at ../../gcc-debug/gcc/cgraphunit.c:2301
+#2  0x0000000000c4a540 in output_in_order () at ../../gcc-debug/gcc/cgraphunit.c:2579
+#3  0x0000000000c4ad88 in symbol_table::compile (this=0xffffaf230000) at ../../gcc-debug/gcc/cgraphunit.c:2820
+#4  0x0000000000c4b2f0 in symbol_table::finalize_compilation_unit (this=0xffffaf230000) at ../../gcc-debug/gcc/cgraphunit.c:3003
+#5  0x00000000012f6d4c in compile_file () at ../../gcc-debug/gcc/toplev.c:483
+#6  0x00000000012fb01c in do_compile () at ../../gcc-debug/gcc/toplev.c:2307
+#7  0x00000000012fb3f0 in toplev::main (this=0xfffffffff188, argc=2, argv=0xfffffffff2d8) at ../../gcc-debug/gcc/toplev.c:2446
+#8  0x00000000022e5ccc in main (argc=2, argv=0xfffffffff2d8) at ../../gcc-debug/gcc/main.c:39
+(gdb) p pass==g.m_passes.all_passes
+$12 = true
+```
