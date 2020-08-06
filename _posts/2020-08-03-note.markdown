@@ -26,3 +26,11 @@ date: 2020-08-03 08:50:15 +0000
 #10 0x00000000012fb3f0 in toplev::main (this=0xfffffffff188, argc=2, argv=0xfffffffff2d8) at ../../gcc-debug/gcc/toplev.c:2446
 #11 0x00000000022e5ccc in main (argc=2, argv=0xfffffffff2d8) at ../../gcc-debug/gcc/main.c:39
 ```
+
+调试过程中可以使用以下函数查看相关信息：
+* get_insns() / get_current_sequence()->first 获得第一个 INSN，通常是一个 NOTE 节点
+* get_current_sequence() 获得 {first, last, next} 信息
+
+API：
+* start_sequence  对 "current_sequence" 进行暂存和清空
+* end_sequence 对 "current_sequence" 进行恢复
