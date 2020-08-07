@@ -34,3 +34,7 @@ date: 2020-08-03 08:50:15 +0000
 API：
 * start_sequence  对 "current_sequence" 进行暂存和清空
 * end_sequence 对 "current_sequence" 进行恢复
+
+主要处理过程：
+1. expand_used_vars 对变量进行展开，自动变量展开后的 rtx_code 为 MEM，
+   临时变量展开后的 rtx_code 为 REG（虚拟寄存器）。
