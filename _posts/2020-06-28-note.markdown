@@ -11,6 +11,18 @@ date: 2020-06-28 08:50:15 +0000
 
 单纯来看每个 PASS 的实现过程，有的还是比较容易理解的。但是，各种转换背后的动机是什么？
 
+几个重要的转换节点：
+* pass_expand 将 GIMPLE 中间表示转换成 RTL 中间表示，这步转换用到了机器描述（md)文件，
+  因此也是机器无关的中间表示到机器相关的中间表示的转换。除了为了进一步方便最终转换成
+  汇编（RTL 与汇编代码的对应比 GIMPLE 来得更详细和直接），同时有些优化也是要在确定的
+  机器模式上才可以进行的。
+* pass_instantiate_vitual_regs 将虚拟寄存器对应到物理寄存器，这一步同样要用到机器描述
+  文件。pass_expand 转换过程中对于非自动变量都是使用虚拟寄存器（rtx_code 为 REG）表示
+  的。gcc 对于虚拟寄存器的使用是没有限制的，显然 pass_instantiate_vitual_regs 这一步
+  是必须的。
+* pass_final 将 RTL 中间表示转换成汇编代码。这一步同样要用到机器描述文件，因为机器描述
+  文件中定义了指令模板。
+
 #### pass_remove_use_less_stmts
 
 * pass_remove_use_less_stmts 这个名字已经在 2009 年的时候从 tree-cfg.c 文件中删除了。
