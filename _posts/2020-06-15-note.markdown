@@ -24,6 +24,7 @@ date: 2020-06-15 08:50:15 +0000
   - all_late_ipa_passes 链表
   - all_passes 链表
 
+ipa 是处理整个程序的，而其他 PASS 是处理函数的。all_passes 链表中的 PASS 最多，包括大部分基于 GIMPLE 进行优化的 PASS 和全部基于 RTL 进行优化的 PASS，其中 pass_expand 是两者的分水岭，pass_expand 本身及其后所有的 PASS 都是基于 RTL 进行优化的 PASS。
 
 ### 算法
 
