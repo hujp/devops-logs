@@ -107,6 +107,11 @@ Breakpoint 3 at 0x6a3207: execute_pass_list. (2 locations)
   - 调用 analyze_functions 完成 AST 到 GIMPLE 的转换，开启 all_lowering_passes，
   - 调用 compile 开启优化 passes 处理。
 
+execute_pass_list 调用 execute_pass_list_1 执行 PASS 及子 PASS，然后下一个 PASS。
+execute_pass_list_1 调用 execute_one_pass 执行具体的 PASS。
+需要注意的是执行具体的 PASS 实际上可能什么都不做，即它的 execute 方法直接返回 0。
+因为 C++ 是允许定义父类虚函数的默认实现的。这种情况一般出现在 PASS 有子 PASS 的情况。
+
 全部 PASS 链表的调用栈情况，按调用先后顺序如下。
 
 第一次：
