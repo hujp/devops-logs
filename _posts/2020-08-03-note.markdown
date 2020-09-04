@@ -45,6 +45,12 @@ API：
 5. construct_exit_block 构建退出块。内部调用 expand_function_end，
    如果生成了 insn，就添加到退出块。
 
+### gimple_to_tree
+
+GIMPLE 表示到 RTL 表示的转换一般先将 GIMPLE 表示还原为树结构再进行。理由是：“传统上，RTL 的展开是在树形结构上实现的，而且在 GIMPLE 线性元组上进行 RTL 展开是非常繁琐的” -_-?
+
+### expand_gimple_basic_block
+
 ```
 expand_gimple_basic_block
     ` -> expand_gimple_stmt
