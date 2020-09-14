@@ -56,6 +56,12 @@ expand_gimple_basic_block
     ` -> expand_gimple_stmt
       ` -> expand_gimple_stmt_1
          | -> ...
-         ` -> expand_expr
+         | -> expand_expr
             ` -> expand_expr_real
+               ` -> expand_expr_real_1
+         ` -> expand_expr_real_2
 ```
+
+* expand_gimple_stmt_1 根据 GIMPLE_CODE 进行分支处理，例如 GIMPLE_ASSIGN
+* expand_expr_real_1 根据左操作数的 TREE_CODE 进行分支处理，例如 SSA_NAME
+* expand_expr_real_2 根据右操作数的 TREE_CODE 进行分支处理，例如 PLUS_EXPR
