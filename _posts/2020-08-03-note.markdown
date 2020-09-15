@@ -57,11 +57,26 @@ expand_gimple_basic_block
       ` -> expand_gimple_stmt_1
          | -> ...
          | -> expand_expr
-            ` -> expand_expr_real
-               ` -> expand_expr_real_1
+         |  ` -> expand_expr_real
+         |     ` -> expand_expr_real_1
          ` -> expand_expr_real_2
+            | -> ...
+            | -> expand_abs
+            | -> ...
+            | -> expand_binop
+            |  | -> optab_handler
+            |  | -> expand_binop_directly
+            |  |  ` -> maybe_gen_insn
+            |  ` -> ...
+            | -> ...
+            | -> expand_cond_expr_using_cmove
+            ` -> ...
 ```
 
 * expand_gimple_stmt_1 根据 GIMPLE_CODE 进行分支处理，例如 GIMPLE_ASSIGN
 * expand_expr_real_1 根据左操作数的 TREE_CODE 进行分支处理，例如 SSA_NAME
 * expand_expr_real_2 根据右操作数的 TREE_CODE 进行分支处理，例如 PLUS_EXPR
+* expand_abs、expand_binop 等是具体的某种表达式的处理函数。在调用这些函数之前，相关的操作数会首先通过 expand_operands 函数进行转换，得到对应的 rtx。
+* optab_handler 调用编译时生成的 raw_optab_handler 函数，查找操作符对应的 icode 。
+* expand_binop_directly 如果上面找到了 icode 不为 CODE_FOR_nothing，则说明后端的机器描述文件为此操作定义了指令，那么使用此函数就能得到表达式对应的 rtx。*FIXME*
+* maybe_gen_insn 使用找到的 icode 索引编译时生成的函数指针数组 insn_data[CODE].genfun，并执行找到的函数。生成 rtx。

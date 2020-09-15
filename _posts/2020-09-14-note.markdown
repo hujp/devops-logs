@@ -8,3 +8,4 @@ TODO
 ----
 
 1. 什么是 SSA_NAME 树节点？
+2. function、basic_block、gimple_seq、和 rtx 这几个主要数据结构是如何联系的？
