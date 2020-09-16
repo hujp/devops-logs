@@ -77,6 +77,26 @@ expand_gimple_basic_block
 * expand_expr_real_1 根据左操作数的 TREE_CODE 进行分支处理，例如 SSA_NAME
 * expand_expr_real_2 根据右操作数的 TREE_CODE 进行分支处理，例如 PLUS_EXPR
 * expand_abs、expand_binop 等是具体的某种表达式的处理函数。在调用这些函数之前，相关的操作数会首先通过 expand_operands 函数进行转换，得到对应的 rtx。
-* optab_handler 调用编译时生成的 raw_optab_handler 函数，查找操作符对应的 icode 。
+* optab_handler 调用编译时生成的 raw_optab_handler 函数，查找操作符对应的 icode 。在调用 expand_binop 等函数之前，一般已经知道了表达式的 tree_code 对应的 optab，比如 PLUS_EXPR 对应的是 add_optab 这个枚举值。这种对应关系是机器无关的。raw_optab_handler 根据 add_optab 这个枚举值返回 icode，实际上就是二分查找数组 pats 的成员，返回对应数组元素的 icode 成员。这个 icode 的值是机器相关的，不同后端生成的不同，即使枚举的名字相同，其代表的 Int 值也是不同的。
 * expand_binop_directly 如果上面找到了 icode 不为 CODE_FOR_nothing，则说明后端的机器描述文件为此操作定义了指令，那么使用此函数就能得到表达式对应的 rtx。*FIXME*
 * maybe_gen_insn 使用找到的 icode 索引编译时生成的函数指针数组 insn_data[CODE].genfun，并执行找到的函数。生成 rtx。
+
+### gen_addsi3
+
+```
+gen_addsi3
+   | -> gen_rtx_SET
+      ` -> gen_rtx_fmt_ee_stat
+         | rtx_alloc
+         ` init_rtx_fmt_ee
+   | -> gen_rtx_PLUS
+      ` -> ...
+   ` -> emit_insn
+```
+
+* gen_addsi3 以普通加法为例，该函数是编译 gcc 时编译程序自动生成的，也就是 maybe_gen_insn 执行的 genfun 函数指针。
+* gen_rtx_SET、gen_rtx_fmt_ee_stat、init_rtx_fmt_ee 这些是编译 gcc 时编译程序自动生成的宏或者内联函数，所在文件是 genrtl.h
+* rtx_alloc 这个函数所在的源代码是 gcc/rtl.c
+* emit_insn 这个函数所在的源代码是 gcc/emit-rtl.c
+
+由上可见，不仅源代码会调用编译时生成的后端代码，后端代码也会反过来调用源代码。
