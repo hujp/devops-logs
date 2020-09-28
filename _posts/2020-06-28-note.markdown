@@ -23,36 +23,40 @@ date: 2020-06-28 08:50:15 +0000
 * pass_final 将 RTL 中间表示转换成汇编代码。这一步同样要用到机器描述文件，因为机器描述
   文件中定义了指令模板。
 
-#### pass_remove_use_less_stmts
+*TODO：单独开辟一个系列笔记介绍各种优化处理的理论和GCC处理流程*
 
-* pass_remove_use_less_stmts 这个名字已经在 2009 年的时候从 tree-cfg.c 文件中删除了。
-  不过，相应的功能应该是转移到其他 PASS 中了。
+**pass_remove_use_less_stmts**
 
-#### pass_lower_cf
+* pass_remove_use_less_stmts 这个名字已经在 2009 年的时候从 tree-cfg.c 文件中删除了。不过，相应的功能应该是转移到其他 PASS 中了。
 
-TODO 为什么要这么转换？
+**pass_lower_cf**
 
-#### pass_build_cfg
+*FIXME：为什么要这么转换？*
 
-TODO 为什么要这么转换？
+**pass_build_cfg**
 
-#### pass_build_cgraph_edges
+*FIXME：为什么要这么转换？*
 
-* 记录/构建函数调用关系数据结构的作用是？
+**pass_build_cgraph_edges**
 
-TODO
+*FIXME：记录/构建函数调用关系数据结构的作用是？*
 
-#### pass_build_ssa
+**pass_build_ssa**
 
 SSA(Static Single Asignment)，即每个变量只能被赋值一次。
 
-TODO 为什么要这么转换？
+*FIXME：为什么要这么转换？*
 
-#### pass_all_optimations
+**pass_all_optimations**
 
-这个 PASS 包含很多的子 PASS。该 PASS 本身位于 all_passes 链的前端，属于基于 GIMPLE
-的优化。
+这个 PASS 包含很多的子 PASS。该 PASS 本身位于 all_passes 链的前端，属于基于 GIMPLE 的优化。
 
-#### pass_expand
+**pass_expand**
 
 这个 PASS 将 GIMPLE 中间表示转换成 RTL，所以其后的 PASS 都属于基于 RTL 的优化。
+
+详细请参考 [第 10 章 GIMPLE 到 RTL 转换]
+
+**pass_sched**
+
+这个 PASS 基于 RTL 中间表示进行指令调度优化。
