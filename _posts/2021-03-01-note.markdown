@@ -9,10 +9,6 @@ date: 2021-03-01 08:50:15 +0000
 技术
 ----
 
-### [kafka](https://blog.csdn.net/weixin_45366499/article/details/106943229) 
-
-是一种分布式消息队列工具。TODO
-
 ### [SaltStack](https://developer.ibm.com/zh/articles/os-devops-saltstack-in-cloud/)
 
 是一种自动化部署框架。有Master和Minion两种节点，关系是1-n。通常需要提前配置Master节点和各Minion节点，包括依赖包和SaltStack的安装配置，RSA key的交换，然后才可以通过Master节点让批量Minion执行命令或者分发软件。在云计算环境中，可以通过供应商的一些支持插件配置，在新创建的VM中自动部署SaltStack，进而可以自动部署Master节点定义好的应用程序。
@@ -27,17 +23,12 @@ SaltStack据说有收费的Web控制台，可以更方便地管理各个Minion�
 
 通过在代码间直接使用汇编，阻止编译器乱序重排指令的一种技术。另外，对于支持CPU屏障的CPU，也可以使用类似的技术阻止指令乱序执行。
 
-### MATLAB
-
-是一种（矩阵）编程语言，也是一种开发环境。 TODO
-
-### Linux 内核内存子系统 TODO
-
-1. 通常虚拟地址和物理地址的位数是一样的，比如说48位，那为什么不直接用虚拟地址作为物理地址，而需要通过4级或者3级页表进行映射呢？
-2. 页表是属于系统级别的，还是进程级别的？
-
 案例
 ----
 
+无。
+
 体会
 ----
+
+无。
