@@ -31,6 +31,10 @@ C语言开发标准之一。MISRA（The Motor Industry Software Reliability Asso
 
 全称是汽车开放系统架构，本质上是一种标准化和通过接口分层的思想，可以使得整车生产商、控制器供应商和基础软件供应商可以更专注于自己的开发，提高各部分软件产品的可扩展性和可复用性。2003年诞生以后，逐步形成了一套开发工具链，但价格昂贵，具体有哪些不详。
 
+### [IC](https://book.crifan.com/books/ic_chip_industry_chain_summary/website/)
+
+TODO
+
 案例
 ----
 
