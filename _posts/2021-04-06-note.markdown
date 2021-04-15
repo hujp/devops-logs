@@ -33,7 +33,11 @@ C语言开发标准之一。MISRA（The Motor Industry Software Reliability Asso
 
 ### [IC](https://book.crifan.com/books/ic_chip_industry_chain_summary/website/)
 
-TODO
+不能狭义得理解芯片就是指CPU，其实芯片的种类很多，并且分类方式也不同，比如按是否可编程，按应用领域等对芯片进行分类。经常讲的几种芯片如下：
+* CPU
+* MPU 其实个人电脑或者服务器上的是这种芯片
+* MCU 也叫做单片机。汽车领域用的芯片属于这种
+* SOC 与MCU的区别是可以运行复杂的系统，比如嵌入式Linux。只能手机芯片属于这种
 
 案例
 ----
