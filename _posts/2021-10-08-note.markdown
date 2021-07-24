@@ -9,6 +9,14 @@ date: 2021-10-08 08:50:15 +0000
 技术
 ----
 
+### [入侵检测技术](https://zh.wikipedia.org/wiki/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F)
+
+是一种主动的网络安全设备或应用软件。区别于传统的防火墙技术。
+
+### [加密算法及应用总结](https://blog.csdn.net/hxl517116279/article/details/108338735)
+
+来自CSDN的一篇博客，对几种加密算法的过程原理和应用场景介绍得通俗易懂。HTTPS协议是几种加密算法的综合运用，本文对HTTPS协议的握手过程也进行了详细介绍。
+
 ### [kafka](https://blog.csdn.net/weixin_45366499/article/details/106943229) 
 
 是一种分布式消息队列工具。TODO
