@@ -17,6 +17,10 @@ date: 2021-10-08 08:50:15 +0000
 
 来自CSDN的一篇博客，对几种加密算法的过程原理和应用场景介绍得通俗易懂。HTTPS协议是几种加密算法的综合运用，本文对HTTPS协议的握手过程也进行了详细介绍。
 
+### [S/MIME协议](https://www.cnblogs.com/worter991/p/13476082.html)
+
+是工作在应用层的电子邮件安全协议，也是对加密算法的运用。据说比SMTP+SSL更加安全。
+
 ### [kafka](https://blog.csdn.net/weixin_45366499/article/details/106943229) 
 
 是一种分布式消息队列工具。TODO
