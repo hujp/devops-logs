@@ -27,6 +27,14 @@ date: 2021-10-08 08:50:15 +0000
 
 ---
 
+### [IPSec](https://blog.csdn.net/XMWS_IT/article/details/115182342)
+
+是一种VPN协议。与HTTPS、S/MIME等应用层协议不同，IPSec是一种工作在IP层的安全通信协议，同样IPSec对上层传递的数据综合运用了加密算法。在两个网关间假设IPSec VPN可以使得两个局域网内的主机远程安全通信。
+
+公共网络连接IPSec VPN网关需要使用客户端软件。因为IPSec工作在IP层，所以一般基于IPSec的VPN客户端会在本地创建虚拟网卡，以完成协议要求的功能。在客户端和服务器端建立连接之后，客户端的数据包将经过虚拟网卡处理后送往服务器端。
+
+---
+
 ### [VIP](https://blog.csdn.net/qq_24333367/article/details/107780503)
 
 Linux服务高可用场景的浮动IP技术。除了执行配置网卡配置文件，还可以使用```ifconfig```或```ip```命令。例如[这里](https://blog.csdn.net/chengxuyuanyonghu/article/details/83539966)介绍的。
