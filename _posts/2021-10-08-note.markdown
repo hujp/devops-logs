@@ -21,6 +21,12 @@ date: 2021-10-08 08:50:15 +0000
 
 是工作在应用层的电子邮件安全协议，也是对加密算法的运用。据说比SMTP+SSL更加安全。
 
+### [VIP](https://blog.csdn.net/qq_24333367/article/details/107780503)
+
+Linux服务高可用场景的浮动IP技术。除了执行配置网卡配置文件，还可以使用```ifconfig```或```ip```命令。例如[这里](https://blog.csdn.net/chengxuyuanyonghu/article/details/83539966)介绍的。
+
+不过如果是在云计算场景使用的话，还需要配合路由表修改等操作。
+
 ### [kafka](https://blog.csdn.net/weixin_45366499/article/details/106943229) 
 
 是一种分布式消息队列工具。TODO
