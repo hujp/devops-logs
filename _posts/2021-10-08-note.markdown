@@ -74,8 +74,52 @@ Linux服务高可用场景的浮动IP技术。除了执行配置网卡配置文�
 案例
 ----
 
+### 制作PDF
+
 制作PDF有两种方法，一种是将office文档保存为pdf，一种是将office文档打印为pdf。前者pdf一般比较小，相应地文档中的图片等放大后清晰度也低；后者pdf一般比较大，相应地文档中的图片等放大后清晰度也高。office文档中的图片有一个特性，如果原图片很大，粘贴到office文档后会变得看不清楚，但是放得越大越清楚。相反，如果将原图缩小后再粘贴到office文档的话，可能未放大时比较清楚，但放大后就很模糊。这个特性在将office文档保存或打印为pdf以后也一样，所以可以用来展示需要放大才能看清的工程图纸。
 
+### 再学链表结构
+
+在学校里学习数据结构课程的时候，一般用的是下面的节点定义，然后再定义一些函数来对head进行增删改查。以下定义的好处在于便于理解，适合简单的运用。
+
+```c
+struct data1_node {
+  struct data1_node *prev;
+  struct data1_node *next;
+  int data;
+};
+
+typedef struct data1_node data1_node_t;
+
+data1_node_t *head;
+```
+
+但是，在有很多结构需要相互构建链表的场合，上面的定义就会显得不够灵活。不灵活的地方在于构成链表的节点类型会有很多种。其实可以使用同一种链表节点类型构建多种结构的链表。例如：
+
+```c
+struct list_node {
+    struct list_node *prev;
+    struct list_node *next;
+};
+
+struct data1 {
+    struct list_node *data1_node;
+    int data;
+};
+
+struct data2 {
+    struct list_node *data2_node;
+    int data;
+};
+
+struct data3{
+    struct list_node *data1_head;
+    struct list_node *data2_head;
+    int data;
+};
+```
+
+以上结构在遍历data1_head的时候，因为已知data1_node成员在data1结构中的偏移，所以也很容易取得整个data1类型变量的首地址。
 
 体会
 ----
