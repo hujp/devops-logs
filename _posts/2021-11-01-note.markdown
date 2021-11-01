@@ -10,6 +10,10 @@ date: 2021-11-08 08:50:15 +0000
 技术
 ----
 
+### [OpenSSL](https://www.openssl.org/)
+
+是服务器常用的安全库和命令行工具。官方文档默认是3.0版本，而各Linux发行版可能用的还是1.1.1版本，所以[OpenSSL CookBook](https://www.feistyduck.com/books/openssl-cookbook/)这个文档更适合参考。
+
 ### XSS TODO
 
 是一种Web脚本攻击方式。
