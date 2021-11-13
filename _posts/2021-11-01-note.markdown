@@ -10,6 +10,17 @@ date: 2021-11-08 08:50:15 +0000
 技术
 ----
 
+### [WSL](https://docs.microsoft.com/zh-cn/windows/wsl/install)
+
+是 Windows 平台的 Linux 子系统，一直在变得好用的路上。可能会遇到一些问题。
+
+* 如果官网提示的 `wsl --install` 命令无法使用，就使用 MicroStore 下载安装
+* [MicroStore 可以检索但无法下载](https://jingyan.baidu.com/article/375c8e1976b10f64f3a22963.html)
+
+### [ZFS](http://blog.sina.com.cn/s/blog_6d0a8b110100n0fz.html)
+
+SolarisOS的默认文件系统。初学感觉很复杂，可能习惯之后会觉得很好用吧。
+
 ### [CDN](https://www.zhihu.com/question/36514327?rf=37353035)
 
 是一种分布式网络。通过域名解析和多级缓存加速网络上的资源访问。大型网站可能都是自建 CDN 服务器，现在也有专门的 CDN 服务商，运营商 (ISP) 也有 CDN 服务。
