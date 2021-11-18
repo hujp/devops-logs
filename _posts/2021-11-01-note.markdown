@@ -10,6 +10,21 @@ date: 2021-11-08 08:50:15 +0000
 技术
 ----
 
+### [Nginx实战]()笔记
+
+* [11个执行阶段](https://www.jianshu.com/p/13747f7c0739)
+  1. NGX_HTTP_POST_READ_PHASE
+  2. NGX_HTTP_SERVER_REWRITE_PHASE
+  3. NGX_HTTP_FIND_CONFIG_PHASE
+  4. NGX_HTTP_REWITE_PHASE
+  5. NGX_HTTP_POST_REWRITE_PHASE
+  6. NGX_HTTP_PREACCESS_PHASE
+  7. NGX_HTTP_ACCESS_PHASE
+  8. NGX_HTTP_POST_ACCESS_PHASE
+  9. NGX_HTTP_PRE_CONTENT_PHASE
+  10. NGX_HTTP_CONTENT_PHASE
+  11. NGX_HTTP_LOG_PHASE
+
 ### [WSL](https://docs.microsoft.com/zh-cn/windows/wsl/install)
 
 是 Windows 平台的 Linux 子系统，一直在变得好用的路上。可能会遇到一些问题。
