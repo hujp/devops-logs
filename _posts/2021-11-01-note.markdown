@@ -10,9 +10,9 @@ date: 2021-11-08 08:50:15 +0000
 技术
 ----
 
-### [Nginx实战]()笔记
+### [Nginx 实战]()笔记
 
-* [11个执行阶段](https://www.jianshu.com/p/13747f7c0739)
+* [11 个执行阶段](https://www.jianshu.com/p/13747f7c0739)
   1. NGX_HTTP_POST_READ_PHASE
   2. NGX_HTTP_SERVER_REWRITE_PHASE
   3. NGX_HTTP_FIND_CONFIG_PHASE
@@ -24,6 +24,16 @@ date: 2021-11-08 08:50:15 +0000
   9. NGX_HTTP_PRE_CONTENT_PHASE
   10. NGX_HTTP_CONTENT_PHASE
   11. NGX_HTTP_LOG_PHASE
+* [Ngx_Lua 执行顺序](https://blog.51cto.com/xikder/2331649)
+  1. init_by_lua_block
+  2. init_worker_by_lua_block
+  3. set_by_lua_block
+  4. rewrite_by_lua_block
+  5. access_by_lua_block
+  6. content_by_lua_block
+  7. header_filter_by_lua_block
+  8. body_filter_by_lua_block
+  9. log_by_lua_block
 
 ### [WSL](https://docs.microsoft.com/zh-cn/windows/wsl/install)
 
