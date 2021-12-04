@@ -24,7 +24,7 @@ date: 2021-11-08 08:50:15 +0000
   9. NGX_HTTP_PRE_CONTENT_PHASE
   10. NGX_HTTP_CONTENT_PHASE
   11. NGX_HTTP_LOG_PHASE
-* [Ngx_Lua 执行顺序](https://blog.51cto.com/xikder/2331649)
+* [lua-nginx-module 执行顺序](https://blog.51cto.com/xikder/2331649)
   1. init_by_lua_block
   2. init_worker_by_lua_block
   3. set_by_lua_block
