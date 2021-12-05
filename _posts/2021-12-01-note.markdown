@@ -15,7 +15,7 @@ date: 2021-12-01 08:50:15 +0000
 操作系统和开发框架以及开发语言都可能有自己的软件包管理器。
 * Ubuntu  [apt]() & [dpkg]()
 * CentOS  [yum]() / [dnf]() & [rpm]()
-* Solaris [publisher]() & [pkg*]()
+* Solaris [pkg]() & [pkg*]()
 * Python  [pip](https://pypi.org/project/pip/)
 * Ruby    [gem](https://rubygems.org/)
 * Lua     [luarocks](https://luarocks.org/)
