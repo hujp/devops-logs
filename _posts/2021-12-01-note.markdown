@@ -10,6 +10,20 @@ date: 2021-12-01 08:50:15 +0000
 技术
 ----
 
+### [软件包管理]()
+
+操作系统和开发框架以及开发语言都可能有自己的软件包管理器。
+* Ubuntu  [apt]() & [dpkg]()
+* CentOS  [yum]() / [dnf]() & [rpm]()
+* Solaris [publisher]() & [pkg*]()
+* Python  [pip](https://pypi.org/project/pip/)
+* Ruby    [gem](https://rubygems.org/)
+* Lua     [luarocks](https://luarocks.org/)
+* JS      [npm](https://www.npmjs.com/)
+* Java    [maven](https://maven.apache.org/)
+* C/C++   [conan](https://conan.io/)
+* Go      [go mod](https://github.com/golang/go/wiki/Modules)
+
 ### [Kong](https://docs.konghq.com/)
 
 是一种API Gateway。基于OpenResty/Nginx。Nginx是一款Web容器和反向代理服务器，支持添加lua-nginx-module模块以用于插件开发，使用灵活性和性能表现卓越。OpenResty以Nginx作为模块之一，默认包含lua-nginx-module模块，并开发了很多其他的实用模块，成为了一款优秀的Web应用开发和运行环境。Kong则在OpenResty基础之上，开发了CLI、Admin API、PDK（plugin development kit）等模块，通过运行nginx进程以及与数据库交互等逻辑代码，提供了路由、限速、缓存、认证、负载均衡等API网关功能。
