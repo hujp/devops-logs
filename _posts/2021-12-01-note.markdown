@@ -10,6 +10,10 @@ date: 2021-12-01 08:50:15 +0000
 技术
 ----
 
+### [LuaJIT FFI](https://blog.csdn.net/linuxheik/article/details/53160920)
+
+Lua是一种脚本语言，也是一种可以执行这种语言脚本的解释器。LuaJIT和Lua一样是一种Lua解释器，而且效率更高。FFI是LuaJIT的一个库，用于在Lua代码中调用C代码。另外，Lua本身也有用于调用C代码的API。两者的区别之一是搜索C库文件的路径不同，FFI从系统库文件搜索，Lua C API从lua_package_cpath指定的路径搜索。
+
 ### [软件包管理]()
 
 操作系统和开发框架以及开发语言都可能有自己的软件包管理器。
