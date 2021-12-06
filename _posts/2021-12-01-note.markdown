@@ -10,6 +10,10 @@ date: 2021-12-01 08:50:15 +0000
 技术
 ----
 
+### [Log4SHELL](https://sspai.com/post/70394)
+
+Log4j 模块的漏洞的形象说明。更值得关注的是它引起的思考，软件组件功能涉及的权限（读写、执行、访问网络）是否合适！
+
 ### [AWS Lambda](https://zhuanlan.zhihu.com/p/106513886)
 
 AWS Lambda 是一种 Serverless 实现。在各种编程语言中，Lambda 表达式其实都是一种匿名函数，AWS Lambda 本质上也是函数服务（FaaS)。AWS Lambda 底层采用容器技术来运行用户代码（函数）。用户按需使用，按需付费。
