@@ -10,6 +10,10 @@ date: 2021-12-01 08:50:15 +0000
 技术
 ----
 
+### [bash 的 set 命令](http://www.ruanyifeng.com/blog/2017/11/bash-set.html)
+
+有的脚本语言的 set 命令和变量有关，bash 的 set 命令不是这样，而且在实际应用中还特别重要。
+
 ### [curl 发送 https 请求](https://curl.se/docs/sslcerts.html)
 
 浏览器访问自签名证书网站时，用户可以选择忽略经过继续访问。curl 也可以，最简单的就是使用 -k 选项。注意如果使用代理时，要区分想忽略的是客户机和代理机之间的验证，还是代理机和网站之间的验证。
