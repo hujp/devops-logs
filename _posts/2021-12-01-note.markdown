@@ -10,6 +10,25 @@ date: 2021-12-01 08:50:15 +0000
 技术
 ----
 
+### [Kong 源码学习笔记]()
+
+主要是学习一下 OpenSSL 在 Kong 中的运用，以及与此相关的代码执行过程。
+
+* init 阶段 ```require 'kong'``` 将执行 /usr/local/kong/init.lua，这有点类似 python 包的 __init__.py
+* runloop/handler.lua
+* runloop/certificate.lua 提供 ngx.ssl 的封装函数，例如 set_cert 等
+* 遍历 plugin_iterater 执行每个插件里面的 certificate 函数
+* TODO
+
+### [OpenResty 学习笔记]()
+
+* Lua 定义变量也要使用 $ 号，例如：set $max_size 10000
+* local y = a and b or c，该语句相当于 C 语言的 y = a ? b : c
+* 为了避免反复在全局表里面查找库函数，一般在模块内将库函数取为本地别名，例如： local str_sub = string.sub
+* table.func() 形式调用函数，而不是 table[func]()
+* pcall 保护执行
+* TODO
+
 ### [bash 的 set 命令](http://www.ruanyifeng.com/blog/2017/11/bash-set.html)
 
 有的脚本语言的 set 命令和变量有关，bash 的 set 命令不是这样，而且在实际应用中还特别重要。
