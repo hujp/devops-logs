@@ -35,6 +35,28 @@ date: 2021-11-08 08:50:15 +0000
   8. body_filter_by_lua_block
   9. log_by_lua_block
 
+__注意1：__ set_by_lua_block 并不是 nginx 处理请求的入口点，实际上 set_by_lua_block 所处是阶段应该是 NGX_HTTP_REWITE_PHASE。
+并且，NGX_HTTP_POST_READ_PHASE 也不是入口点，真正的入口点应该是 ngx_http_init_request，[大致流程如下：](https://blog.csdn.net/yankai0219/article/details/8220695)
+
+```
+  ngx_http_init_request
+  ngx_http_process_request_line
+    ngx_http_read_request_header
+    ngx_http_parse_request_line
+  ngx_http_process_request_headers
+    ngx_http_read_request_header
+      ngx_http_parse_header_line
+        <header_handler>
+  ngx_http_process_request
+    ngx_http_request_handler
+    ngx_http_handler
+    ngx_http_core_run_phases
+```
+
+在上面的处理过程中，nginx 应该是可以中断返回的，比如如果发现请求行或请求头有问题时？所以有些 lua 代码在此时可能并不会执行！
+
+__注意2：__ content_by_lua_block 不一定会执行，这个只有当 content 是由 lua 生成的才会执行。判断逻辑参照<https://blog.csdn.net/zwjyyy1203/article/details/80245346>
+
 ### [WSL](https://docs.microsoft.com/zh-cn/windows/wsl/install)
 
 是 Windows 平台的 Linux 子系统，一直在变得好用的路上。可能会遇到一些问题。
