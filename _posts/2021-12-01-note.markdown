@@ -10,6 +10,10 @@ date: 2021-12-01 08:50:15 +0000
 技术
 ----
 
+### [HTTP/2](https://zhuanlan.zhihu.com/p/26559480)
+
+HTTP/2 使用同一个 TCP 连接在客户端和服务器之间传输同一个域名下的请求/响应数据，因此在性能方面比 HTTP/1.1 更好。[这是一个 Nginx 支持 HTTP/2 的示例](https://zhuanlan.zhihu.com/p/26559480)
+
 ### [CGI](https://blog.csdn.net/qq_25705173/article/details/105202098)
 
 CGI/FastCGI 是一种解释程序，一般用来处理 Web 服务器（例如 Nginx）转发过来的请求。以 PHP 为例，安装包中的 php-cgi 就是这样的程序，启动以后会监听本地端口，接受请求并处理返回。这样其他本身不能处理 PHP 语言的 Web 服务器（例如 Nginx）就可以通过转发请求（给CGI）和返回响应（给客户端浏览器）“代理”该语言的服务了。从这个角度而言，CGI/FastCGI 程序也可以认为是另一种意义上的 Web 服务器，只不过它们处理的不是客户端浏览器的请求，而是 Web 服务器转发的请求。
@@ -22,7 +26,10 @@ Nginx 使用 proxy_pass 将请求转发给其他的 Web 服务器，使用 fastc
 
 * init 阶段 ```require 'kong'``` 将执行 /usr/local/kong/init.lua，这有点类似 python 包的 __init__.py
 * runloop/handler.lua
-* runloop/certificate.lua 提供 ngx.ssl 的封装函数，例如 set_cert 等
+* runloop/certificate.lua 提供 ngx.ssl 的封装函数，例如 [set_cert](https://www.cnblogs.com/jimodetiantang/p/9260698.html) 等。如果客户端使用 ip 地址或者 localhost，那么 kong 会使用默认的证书和 key
+  * clear_certs
+  * set_cert
+  * set_priv_key
 * 遍历 plugin_iterater 执行每个插件里面的 certificate 函数
 * TODO
 
