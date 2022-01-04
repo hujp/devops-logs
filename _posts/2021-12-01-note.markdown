@@ -20,48 +20,6 @@ CGI/FastCGI 是一种解释程序，一般用来处理 Web 服务器（例如 Ng
 
 Nginx 使用 proxy_pass 将请求转发给其他的 Web 服务器，使用 fastcgi_pass 将请求转发给 fastcgi 解释程序，并且都支持冗余后端或负载均衡，[这里有个示例](https://blog.csdn.net/xixiyuguang/article/details/105844206)。
 
-### [Kong 源码学习笔记]()
-
-主要是学习一下 OpenSSL 在 Kong 中的运用，以及与此相关的代码执行过程。
-
-* init 阶段 ```require 'kong'``` 将执行 /usr/local/kong/init.lua，这有点类似 python 包的 __init__.py
-* runloop/handler.lua
-* runloop/certificate.lua 提供 ngx.ssl 的封装函数，例如 [set_cert](https://www.cnblogs.com/jimodetiantang/p/9260698.html) 等。如果客户端使用 ip 地址或者 localhost，那么 kong 会使用默认的证书和 key
-  * clear_certs
-  * set_cert
-  * set_priv_key
-* 遍历 plugin_iterater 执行每个插件里面的 certificate 函数
-* TODO
-
-### [OpenResty 学习笔记]()
-
-* Lua 定义变量也要使用 $ 号，例如：set $max_size 10000
-* local y = a and b or c，该语句相当于 C 语言的 y = a ? b : c
-* 为了避免反复在全局表里面查找库函数，一般在模块内将库函数取为本地别名，例如： local str_sub = string.sub
-* table.func() 形式调用函数，而不是 table[func]()
-* pcall 保护执行
-* lua_code_cache off 常用于调试，但是对于写在 nginx 配置文件里的代码的修改仍需要 reload。官方文档中指出 lua_code_cache 作用的对象是 *_by_lua_file 配置，实际上对于 *_by_lua_block 中 require 的脚本也有效。例如：
-  ```lua
-  content_by_lua_block {
-      Hello = require "hello"  -- 注意 Hello 前如果加 local 的话，则每次执行都会重新 require
-      Hello.say()
-  }
-  ```
-* 对于正则替换最好不要使用 o 选项，既没有意义，又会消耗 lua_regex_cache_max_entries
-* lua_malloc_trim 配置清理内存操作间隔的请求次数
-* ngx.var.xxx 取得的值类型是字符串
-* ngx.ctx 用于在各个阶段间传递数据，且可以存储表
-* ngx.escape_uri/ngx_unescape_uri 编码/解码 url 中的 “= % # &”
-* ngx.req.get_headers 取得请求头，使用 .xxx 访问时需全小写，并且要讲中划线替换成下划线，使用 [xxx] 访问时无需转换
-* 用作反向代理时不能使用 content_by_lua*，此时只能使用 header_filter_by_lua* 来更新相应头
-* 使用 body_filter_by_lua 之前最好删除响应头里面的 Content-Length
-* ngx.eof 可以尽早返回给客户端数据，然后再执行统计、存储等收尾工作，减少客户端感知的等待时间
-* cosocket:connect 不能识别 upstream，可使用事前用代码实现负载均衡，再将结果作为 connect 的参数
-* 每一个后端服务都有一个连接池
-* 访问数据库时，调用函数 ngx.quote_sql_str 防止 sql 注入
-* TODO
-* 到底是不是同步非阻塞？
-
 ### [bash 的 set 命令](http://www.ruanyifeng.com/blog/2017/11/bash-set.html)
 
 有的脚本语言的 set 命令和变量有关，bash 的 set 命令不是这样，而且在实际应用中还特别重要。
@@ -99,22 +57,6 @@ Lua是一种脚本语言，也是一种可以执行这种语言脚本的解释�
 ### [Kong](https://docs.konghq.com/)
 
 是一种API Gateway。基于OpenResty/Nginx。Nginx是一款Web容器和反向代理服务器，支持添加lua-nginx-module模块以用于插件开发，使用灵活性和性能表现卓越。OpenResty以Nginx作为模块之一，默认包含lua-nginx-module模块，并开发了很多其他的实用模块，成为了一款优秀的Web应用开发和运行环境。Kong则在OpenResty基础之上，开发了CLI、Admin API、PDK（plugin development kit）等模块，通过运行nginx进程以及与数据库交互等逻辑代码，提供了路由、限速、缓存、认证、负载均衡等API网关功能。
-
-### XSS TODO
-
-是一种Web脚本攻击方式。
-
-1. 如果是通过正常的用户接口注入攻击脚本，那么最终攻击的不还是自己吗？如果是正常的用户请求被中间人篡改，那么中间人不可以篡改服务器的响应吗，那样的话还需要什么漏洞，没有漏洞照样注入任意代码啊？
-
-### [kafka](https://blog.csdn.net/weixin_45366499/article/details/106943229) 
-
-是一种分布式消息队列工具。TODO
-
-### Linux 内核内存子系统 TODO
-
-1. 通常虚拟地址和物理地址的位数是一样的，比如说48位，那为什么不直接用虚拟地址作为物理地址，而需要通过4级或者3级页表进行映射呢？
-2. 页表是属于系统级别的，还是进程级别的？
-3. 页表和cache是什么关系？
 
 
 案例
