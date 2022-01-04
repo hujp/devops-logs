@@ -10,6 +10,11 @@ date: 2021-11-08 08:50:15 +0000
 技术
 ----
 
+### [agentzh 的 Nginx 教程](https://openresty.org/download/agentzh-nginx-tutorials-zhcn.html)笔记
+
+* 对于 Nginx 新手来说，最常见的错误之一，就是将 Nginx 变量理解成某种在请求之间全局共享的东西，或者说“全局变量”。而事实上，Nginx 变量的生命期是不可能跨越请求边界的
+* TODO
+
 ### [Nginx 实战]()笔记
 
 * [11 个执行阶段](https://www.jianshu.com/p/13747f7c0739)
