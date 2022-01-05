@@ -62,6 +62,12 @@ __注意1：__ set_by_lua_block 并不是 nginx 处理请求的入口点，实�
 
 __注意2：__ content_by_lua_block 不一定会执行，这个只有当 content 是由 lua 生成的才会执行。判断逻辑参照<https://blog.csdn.net/zwjyyy1203/article/details/80245346>
 
+### [版本控制]()
+
+* [Mercurial/hg](https://mercurial.selenic.com/) 一款有点类似 git 的分布式版本控制软件
+* [Git](https://git-scm.com/)
+* [SVN](https://tortoisesvn.net/)
+
 ### [WSL](https://docs.microsoft.com/zh-cn/windows/wsl/install)
 
 是 Windows 平台的 Linux 子系统，一直在变得好用的路上。可能会遇到一些问题。

@@ -10,10 +10,21 @@ date: 2022-01-04 08:50:15 +0000
 技术
 ----
 
-### [版本控制]()
+### [kafka](https://blog.csdn.net/weixin_45366499/article/details/106943229) 
 
-* [Mercurial/hg](https://mercurial.selenic.com/) 一款有点类似 git 的分布式版本控制软件
-* TODO
+是一种分布式消息队列工具。TODO
+
+### Linux 内核内存子系统 TODO
+
+1. 通常虚拟地址和物理地址的位数是一样的，比如说48位，那为什么不直接用虚拟地址作为物理地址，而需要通过4级或者3级页表进行映射呢？
+2. 页表是属于系统级别的，还是进程级别的？
+3. 页表和cache是什么关系？
+
+### XSS TODO
+
+是一种Web脚本攻击方式。
+
+1. 如果是通过正常的用户接口注入攻击脚本，那么最终攻击的不还是自己吗？如果是正常的用户请求被中间人篡改，那么中间人不可以篡改服务器的响应吗，那样的话还需要什么漏洞，没有漏洞照样注入任意代码啊？
 
 ### [Kong 源码学习笔记]()
 
@@ -73,22 +84,17 @@ configure arguments: --prefix=/usr/local/openresty/nginx --with-cc-opt='-O2 -I/t
 * 调试 OpenResty 程序的主要手段目前就是打印日志
 * OpenResty/Nginx 的同步非阻塞可能体现在“对于协程的执行结果主进程并不会一直等待，而任一协程执行完了，主进程都可以及时响应”这一点上
 
-### XSS TODO
+### [busted](http://olivinelabs.com/busted/)
 
-是一种Web脚本攻击方式。
+是一款 Lua 单元测试框架。
 
-1. 如果是通过正常的用户接口注入攻击脚本，那么最终攻击的不还是自己吗？如果是正常的用户请求被中间人篡改，那么中间人不可以篡改服务器的响应吗，那样的话还需要什么漏洞，没有漏洞照样注入任意代码啊？
+### [SystemTap](https://sourceware.org/systemtap/SystemTap_Beginners_Guide.pdf)
 
-### [kafka](https://blog.csdn.net/weixin_45366499/article/details/106943229) 
+是一款内核分析工具，也可用于监视用户程序。
 
-是一种分布式消息队列工具。TODO
+### [火焰图](http://www.ruanyifeng.com/blog/2017/09/flame-graph.html)
 
-### Linux 内核内存子系统 TODO
-
-1. 通常虚拟地址和物理地址的位数是一样的，比如说48位，那为什么不直接用虚拟地址作为物理地址，而需要通过4级或者3级页表进行映射呢？
-2. 页表是属于系统级别的，还是进程级别的？
-3. 页表和cache是什么关系？
-
+是一种分析 perf 命令产生的程序性能数据的方式，通过 SVG 图片的可互动性降低数据分析的难度。
 
 案例
 ----
