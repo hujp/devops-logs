@@ -10,6 +10,11 @@ date: 2022-01-04 08:50:15 +0000
 技术
 ----
 
+### [版本控制]()
+
+* [Mercurial/hg](https://mercurial.selenic.com/) 一款有点类似 git 的分布式版本控制软件
+* TODO
+
 ### [Kong 源码学习笔记]()
 
 主要是学习一下 OpenSSL 在 Kong 中的运用，以及与此相关的代码执行过程。
@@ -25,6 +30,17 @@ date: 2022-01-04 08:50:15 +0000
 
 ### [OpenResty 学习笔记]()
 
+OpenResty 打包了 Nginx 的常用内建模块（通过 --with-xxx_yyy_module）和第三方模块（通过 --add-module），并开发了 ngx_lua 和 ngx_stream_lua 两个核心模块以使 Nginx 拥有了支持 Lua 脚本的能力。执行 ```openresty -V``` 可以查看当前版本使用的所有模块。
+
+```bash
+# ./openresty -V
+nginx version: openresty/1.19.9.1
+built by gcc 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+built with OpenSSL 1.1.1l  24 Aug 2021
+TLS SNI support enabled
+configure arguments: --prefix=/usr/local/openresty/nginx --with-cc-opt='-O2 -I/tmp/build/usr/local/kong/include' --add-module=../ngx_devel_kit-0.3.1 --add-module=../echo-nginx-module-0.62 --add-module=../xss-nginx-module-0.06 --add-module=../ngx_coolkit-0.2 --add-module=../set-misc-nginx-module-0.32 --add-module=../form-input-nginx-module-0.12 --add-module=../encrypted-session-nginx-module-0.08 --add-module=../srcache-nginx-module-0.32 --add-module=../ngx_lua-0.10.20 --add-module=../ngx_lua_upstream-0.07 --add-module=../headers-more-nginx-module-0.33 --add-module=../array-var-nginx-module-0.05 --add-module=../memc-nginx-module-0.19 --add-module=../redis2-nginx-module-0.15 --add-module=../redis-nginx-module-0.3.7 --add-module=../rds-json-nginx-module-0.15 --add-module=../rds-csv-nginx-module-0.09 --add-module=../ngx_stream_lua-0.0.10 --with-ld-opt='-Wl,-rpath,/usr/local/openresty/luajit/lib -L/tmp/build/usr/local/kong/lib -Wl,--disable-new-dtags,-rpath,/usr/local/kong/lib' --with-pcre-jit --with-http_ssl_module --with-http_realip_module --with-http_stub_status_module --with-http_v2_module --add-module=/work/lua-kong-nginx-module --add-module=/work/lua-kong-nginx-module/stream --with-stream_realip_module --with-stream_ssl_preread_module --with-pcre=/work/pcre-8.44 --with-pcre-opt=-g --with-stream --with-stream_ssl_module
+```
+
 * Lua 定义变量也要使用 $ 号，例如：set $max_size 10000
 * local y = a and b or c，该语句相当于 C 语言的 y = a ? b : c
 * 为了避免反复在全局表里面查找库函数，一般在模块内将库函数取为本地别名，例如： local str_sub = string.sub
@@ -38,19 +54,24 @@ date: 2022-01-04 08:50:15 +0000
   }
   ```
 * 对于正则替换最好不要使用 o 选项，既没有意义，又会消耗 lua_regex_cache_max_entries
-* lua_malloc_trim 配置清理内存操作间隔的请求次数
 * ngx.var.xxx 取得的值类型是字符串
 * ngx.ctx 用于在各个阶段间传递数据，且可以存储表
-* ngx.escape_uri/ngx_unescape_uri 编码/解码 url 中的 “= % # &”
-* ngx.req.get_headers 取得请求头，使用 .xxx 访问时需全小写，并且要讲中划线替换成下划线，使用 [xxx] 访问时无需转换
-* 用作反向代理时不能使用 content_by_lua*，此时只能使用 header_filter_by_lua* 来更新相应头
+* ngx.escape_uri/ngx.unescape_uri 编码/解码 url 中的 “= % # &” (Nginx 本身也有类似的指令，肯定也有类似的函数)
+* ngx.req.get_headers 取得请求头，使用 .xxx 访问时需全小写，并且要将中划线替换成下划线，使用 [xxx] 访问时无需转换
+* 用作反向代理时不能使用 content_by_lua*，此时只能使用 header_filter_by_lua* 来更新响应头
 * 使用 body_filter_by_lua 之前最好删除响应头里面的 Content-Length
 * ngx.eof 可以尽早返回给客户端数据，然后再执行统计、存储等收尾工作，减少客户端感知的等待时间
-* cosocket:connect 不能识别 upstream，可使用事前用代码实现负载均衡，再将结果作为 connect 的参数
+* cosocket:connect 不能识别 upstream，可事前用代码实现负载均衡，再将结果作为 connect 的参数
 * 每一个后端服务都有一个连接池
-* 访问数据库时，调用函数 ngx.quote_sql_str 防止 sql 注入
-* TODO
-* 到底是不是同步非阻塞？
+* 访问数据库时，调用函数 ngx.quote_sql_str 防止 sql 注入 (Nginx 本身也有类似的指令，肯定也有类似的函数)
+* 使用 upstream.set_peer_down 让后端一个服务器下线，这仅对当前进程有效。如果要同步这种状态，则可能需要共享内存&定时器等手段
+* balancer_by_lua 阶段访问 ngx 对象受限，且不宜处理过多的计算/磁盘读写。可以把需要的处理提前到其他阶段执行后再共享
+* ngx.timer.every 一旦任务启动后就只能无限地以固定的参数运行下去，无法改变或停止
+* 特权进程可以利用自己的 root 特权做其他 worker 进程无法做的事情，然后通过共享内存等方式与其他 worker 进程通信
+* 信号量只能在本进程内的线程之间同步，不同进程内的线程同步必须使用共享内存
+* 使用 ticket_key 复用会话要注意定期更换，可以使用 ngx.ssl.session.ticket.key_rotation 实现自动轮换
+* 调试 OpenResty 程序的主要手段目前就是打印日志
+* OpenResty/Nginx 的同步非阻塞可能体现在“对于协程的执行结果主进程并不会一直等待，而任一协程执行完了，主进程都可以及时响应”这一点上
 
 ### XSS TODO
 
