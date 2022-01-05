@@ -13,6 +13,10 @@ date: 2021-11-08 08:50:15 +0000
 ### [agentzh 的 Nginx 教程](https://openresty.org/download/agentzh-nginx-tutorials-zhcn.html)笔记
 
 * 对于 Nginx 新手来说，最常见的错误之一，就是将 Nginx 变量理解成某种在请求之间全局共享的东西，或者说“全局变量”。而事实上，Nginx 变量的生命期是不可能跨越请求边界的
+* 内部跳转前后请求上下文是同一个，所以变量的副本也不会变。rewrite 默认是内部跳转
+* 第三方模块 [ngx_set_misc](http://wiki.nginx.org/HttpSetMiscModule) 提供了 uri/sql 编解码等功能，很有用
+* 内建变量：$arg_XXX、$cookie_XXX、$http_XXX、$sent_http_XXX...。内建变量是只读的，改写可能导致错误或进程崩溃。每次访问这些变量都可能会执行一小段解析程序，因此频繁访问时可以保存到本地以防止影响性能，但是要注意确保相关原始变量的值没有发生变化
+* $args 变量支持改写，并会影响后面所有对 $args 和 $arg_XXX 的读取。反向代理默认传递 $args
 * TODO
 
 ### [Nginx 实战]()笔记
