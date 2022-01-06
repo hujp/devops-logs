@@ -17,6 +17,14 @@ date: 2021-11-08 08:50:15 +0000
 * 第三方模块 [ngx_set_misc](http://wiki.nginx.org/HttpSetMiscModule) 提供了 uri/sql 编解码等功能，很有用
 * 内建变量：$arg_XXX、$cookie_XXX、$http_XXX、$sent_http_XXX...。内建变量是只读的，改写可能导致错误或进程崩溃。每次访问这些变量都可能会执行一小段解析程序，因此频繁访问时可以保存到本地以防止影响性能，但是要注意确保相关原始变量的值没有发生变化
 * $args 变量支持改写，并会影响后面所有对 $args 和 $arg_XXX 的读取。反向代理默认传递 $args
+* ngx_map 模块会缓存映射结果，ngx_geo 模块也会缓存映射结果。map 指令只能在 http 块中使用
+* 有的第三方模块会在父子请求之间共享变量容器，例如 [ngx_auth_request]()；有的子请求指令在某些情况下忽略响应体，例如 auth_request 指令
+* 有的内建变量在父子请求间取值不同，例如 $args；有的内建变量在父子请求之间取值相同，例如 $request_method、$request_uri。各有各的问题，实际上最好是不共享变量容器
+* $arg_XXX 无法区分变量不存在和变量值为空字符串，这是某些情况下是有必要的（[ngx_lua]() 模块可以解决这个问题）
+* 指令的执行顺序与 phase 有关
+* [ngx_set_misc]() 模块的指令、set_by_lua 指令、[ngx_array_var]() 模块的指令，和 ngx_rewrite 模块的指令是在 rewrite phase 按书写顺序执行的，但并不是所有第三方模块的 rewrite phase 指令都有这样的特性！有的可能和模块的加载顺序相关，取决于模块的实现。
+* more_set_input_headers 指令和 rewrite_by_lua 指令都是在 rewrite phase 的末尾（ngx_rewrite 模块指令之后）执行，而它们之间的执行顺序则不一定，应避免产生歧义
+* access_by_lua 指令总是在 ngx_access 模块的指令之后运行，根据实测其性能相差 1 个数量级，但是绝对值都很小
 * TODO
 
 ### [Nginx 实战]()笔记
