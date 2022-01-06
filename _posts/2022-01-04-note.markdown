@@ -96,6 +96,10 @@ configure arguments: --prefix=/usr/local/openresty/nginx --with-cc-opt='-O2 -I/t
 
 是一种分析 perf 命令产生的程序性能数据的方式，通过 SVG 图片的可互动性降低数据分析的难度。
 
+### [dtrace](https://blog.csdn.net/kwame211/article/details/84774026)
+
+是一种动态追踪工具，用于性能分析等场景。源自 Solaris, Mac OS X, 以及 FreeBSD 等系统，Linux 系统可能也有类似的工具。
+
 案例
 ----
 
