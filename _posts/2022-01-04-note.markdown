@@ -100,6 +100,14 @@ configure arguments: --prefix=/usr/local/openresty/nginx --with-cc-opt='-O2 -I/t
 
 是一种动态追踪工具，用于性能分析等场景。源自 Solaris, Mac OS X, 以及 FreeBSD 等系统，Linux 系统可能也有类似的工具。
 
+### [解释器和编译器和JIT](https://www.iteye.com/blog/rednaxelafx-492667)
+
+> 实际上很多解释器内部是以“编译器+虚拟机”的方式来实现的，先通过编译器将源码转换为AST或者字节码，然后由虚拟机去完成实际的执行。所谓“解释型语言”并不是不用编译，而只是不需要用户显式去使用编译器得到可执行代码而已。
+
+解释型语言和解释器不是一个概念。例如，python 语言和我们安装的 /usr/bin/python 不是一个概念。个人比较赞同“避免使用解释型语言这种说法”！
+
+关于 JIT，请看[HotSpot是较新的Java虚拟机技术，用来代替JIT技术,那么HotSpot和JIT是共存的吗？](https://www.zhihu.com/question/26913901/answer/35303563)。JIT 一般是为了提高解释器的性能，通过在内部预先编译全部或部分代码来实现。
+
 案例
 ----
 
