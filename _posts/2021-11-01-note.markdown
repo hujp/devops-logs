@@ -25,6 +25,8 @@ date: 2021-11-08 08:50:15 +0000
 * [ngx_set_misc]() 模块的指令、set_by_lua 指令、[ngx_array_var]() 模块的指令，和 ngx_rewrite 模块的指令是在 rewrite phase 按书写顺序执行的，但并不是所有第三方模块的 rewrite phase 指令都有这样的特性！有的可能和模块的加载顺序相关，取决于模块的实现。
 * more_set_input_headers 指令和 rewrite_by_lua 指令都是在 rewrite phase 的末尾（ngx_rewrite 模块指令之后）执行，而它们之间的执行顺序则不一定，应避免产生歧义
 * access_by_lua 指令总是在 ngx_access 模块的指令之后运行，根据实测其性能相差 1 个数量级，但是绝对值都很小
+* 只能有一个模块工作在 content phase，例如 ngx_echo、content_by_lua*、或者 ngx_proxy
+* ngx_index 发起内部跳转，ngx_autoindex(autoindex on) 自动生成索引内容，ngx_static 返回静态资源（网页，图片等文件）
 * TODO
 
 ### [Nginx 实战]()笔记
