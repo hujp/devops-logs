@@ -108,10 +108,15 @@ configure arguments: --prefix=/usr/local/openresty/nginx --with-cc-opt='-O2 -I/t
 
 关于 JIT，请看[HotSpot是较新的Java虚拟机技术，用来代替JIT技术,那么HotSpot和JIT是共存的吗？](https://www.zhihu.com/question/26913901/answer/35303563)。JIT 一般是为了提高解释器的性能，通过在内部预先编译全部或部分代码来实现。
 
+
 案例
 ----
 
-空空如也。
+使用 Nginx 做代理服务器，监听的端口是 8000，而后端服务器的端口是 80，一般的请求都能被正常处理，但是当服务器端返回重定向 (302) 时，客户端浏览器的 url 端口就丢了，页面也就无法访问了。经过调查 [Nginx 文档](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_redirect), 以下配置解决了此问题。
+
+```nginx.conf
+proxy_redirect http://$host http://$host:$server_port;
+```
 
 
 体会
