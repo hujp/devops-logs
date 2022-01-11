@@ -27,9 +27,14 @@ date: 2021-11-08 08:50:15 +0000
 * access_by_lua 指令总是在 ngx_access 模块的指令之后运行，根据实测其性能相差 1 个数量级，但是绝对值都很小
 * 只能有一个模块工作在 content phase，例如 ngx_echo、content_by_lua*、或者 ngx_proxy
 * ngx_index 发起内部跳转，ngx_autoindex(autoindex on) 自动生成索引内容，ngx_static 返回静态资源（网页，图片等文件）
+* 使用 ngx_realip 模块来改写请求中来源于代理服务器的 ip 地址。ngx_realip 执行的阶段是 post_read，是 nginx 完成请求行/头读取处理后的第 1 个阶段
+* 直接写在 server {} 块中的 set 等 ngx_rewrite 模块指令执行的阶段是 server_rewrite，是比 rewrite 更早的阶段
+* 在一个 location 中多次 rewrite 只会发生一次跳转，因为跳转真正发生的阶段是 post-rewrite，而不是 rewrite
+* post-access 阶段实现了 satisfy all 或者 satisfy any
+* try-files 阶段确认前 N - 1 个参数对应的文件/目录是否存在，如果存在则改写 uri 并继续执行后面的阶段，如果都不存在则内部跳转到最后一个参数指向的 location
 * TODO
 
-### [Nginx 实战]()笔记
+综上，Nginx 的 11 个执行阶段和 ngx_lua 模块各指令的执行顺序如下：
 
 * [11 个执行阶段](https://www.jianshu.com/p/13747f7c0739)
   1. NGX_HTTP_POST_READ_PHASE
