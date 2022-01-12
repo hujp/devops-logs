@@ -35,7 +35,6 @@ date: 2021-11-08 08:50:15 +0000
 * TODO
 
 综上，Nginx 的 11 个执行阶段和 ngx_lua 模块各指令的执行顺序如下：
-
 * [11 个执行阶段](https://www.jianshu.com/p/13747f7c0739)
   1. NGX_HTTP_POST_READ_PHASE
   2. NGX_HTTP_SERVER_REWRITE_PHASE
@@ -80,6 +79,12 @@ __注意1：__ set_by_lua_block 并不是 nginx 处理请求的入口点，实�
 在上面的处理过程中，nginx 应该是可以中断返回的，比如如果发现请求行或请求头有问题时？所以有些 lua 代码在此时可能并不会执行！
 
 __注意2：__ content_by_lua_block 不一定会执行，这个只有当 content 是由 lua 生成的才会执行。判断逻辑参照<https://blog.csdn.net/zwjyyy1203/article/details/80245346>
+
+官方 Nginx 编译的内建模块可能比 OpenResty 等第 3 方编译的内建模块要多，所以在学习模块开发的时候不妨选择一些通用的模块。例如 http_realip_module 等。Nginx HTTP 模块开发框架包括（[示例](https://www.kancloud.cn/digest/understandingnginx/202595)）：
+* ngx_module_t 结构体定义
+* ngx_http_module_t 结构体定义。一组函数指针，在配置解析过程中的 http{} server{} location{} 不同阶段相应的函数将被调用来创建配置结构体或者合并配置。还包括 preconfiguration 和 postconfiguration 函数指针。一般情况下，在 postconfiguration 函数指针指向的函数内，需要注册“请求处理程序 (request handler) ”或者“内容处理程序（response filter）”
+* ngx_command_t 结构体数组定义。每个元素定义一个指令。包括指令的作用域、指令参数解析函数等
+* 以上各函数的定义，以及其他模块内数据结构和函数的定义，例如必须把所有的指令参数解析结果定义为一个数据结构，例如 request handler 函数定义或者 response filter 函数定义等
 
 ### [版本控制]()
 
