@@ -132,7 +132,74 @@ OCSP Stapling由服务端在tls握手阶段提供OCSP查询的缓存，防止CA�
 案例
 ----
 
-空空如也。
+### 使用 Nginx 做反向代理遇到的几个问题
+
+nginx 的官方文档看起来很直观也很全面，但是对于各个参数的解释感觉有的说得也不深入。所以在网上找问题，经常看到“原因也不懂，反正这么配置问题就没了”这样的描述^^
+
+1. 上游返回重定向时，浏览器的地址栏里反向代理服务的端口号（非默认的 80）丢失
+
+   ```nginx.conf
+   proxy_redirect $host $host:$server_port;
+   proxy_redirect $proxy_host $host:$server_port;
+   ```
+
+   上面的配置可以解决问题，但是似乎会引起新的问题。参加[问题 6]()
+
+2. Nginx error.log 中偶尔打印```upstream prematurely closed connection while reading response header from upstream```和```upstream timed out (110: Connection timed out) while reading upstream```
+
+   ```nginx.conf
+   proxy_connect_timeout 300s;
+   proxy_read_timeout 300s;
+   proxy_send_timeout 300s;
+   ```
+
+   添加这些配置可以部分解决问题，但是可能有很多原因会导致问题中的错误输出，所以这不是一个有针对性的解决。在网上还看到其他的解决方案，看不出来有啥关联。
+
+   ```nginx.conf
+   proxy_http_version      1.1;
+   proxy_set_header Connection "";
+   ```
+
+3. 浏览器上传大文件失败
+
+   ```nginx.conf
+   client_max_body_size 0;
+   client_body_buffer_size 1024k;
+   ```
+
+   添加这些配置可以上传成功，但是由于上传很慢，有可能会发生超时错误。至于为什么上传很慢，可能原因比较多。。。
+
+4. 浏览器下载文件经常失败
+
+   ```nginx.conf
+   proxy_buffering on;
+   proxy_buffer_size 32k;
+   proxy_buffer 8 64k;
+   proxy_busy_buffer_size 128k;
+   proxy_max_temp_file_size 256m;
+   proxy_temp_file_write_size 10m; 
+   ```
+
+   关闭```proxy_buffering```，从 nginx 的官方文档来看似乎能更快地“透传”，但是不知道是不是因为上下游速率不一致的原因，下载文件容易失败，失败后会自动重新下载。
+
+5. 上游服务（redmine）页面上添加查询过滤器应用后过滤器丢失
+
+   ```nginx.conf
+   # proxy_pass http://xxx/$request_uri;
+   proxy_pass http://xxx/$uri?$args;
+   ```
+
+   不要使用 request_uri，我怀疑 request_uri 变量缓存了 args，所以当 args 被改写后问题就发生了。
+
+6. 上游服务（redmine）页面上删除附件浏览器重定向失败
+
+   ```nginx.conf
+   # proxy_redirect $host $host:$server_port;
+   # proxy_redirect $proxy_host $host:$server_port;
+   proxy_set_header Host $host:$server_port
+   ```
+
+   这里我没有理解。浏览器收到重定向指示后会获取响应头中的“Location”，但是使用 proxy_redirect 似乎此时没有去改变“Location”，但在[问题 1]()中却是可以的。使用 proxy_set_header 可以解决这个问题，按 nginx 文档来看，因为 proxy_pass 时使用了变量 $uri 和 $args，所以此时相当于是没有定义 proxy_redirect，而不是```proxy_redirect default```，但一切正常了。那么 proxy_redirect 还有用吗？
 
 
 体会
