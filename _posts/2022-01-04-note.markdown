@@ -26,6 +26,12 @@ date: 2022-01-04 08:50:15 +0000
 
 1. 如果是通过正常的用户接口注入攻击脚本，那么最终攻击的不还是自己吗？如果是正常的用户请求被中间人篡改，那么中间人不可以篡改服务器的响应吗，那样的话还需要什么漏洞，没有漏洞照样注入任意代码啊？
 
+### [OpenSSL](https://www.openssl.org/)
+
+OpenSSL 是服务器常用的安全库和命令行工具。官方文档默认是3.0版本，而各Linux发行版可能用的还是1.1.1版本，所以[OpenSSL CookBook](https://www.feistyduck.com/books/openssl-cookbook/)这个文档更适合参考。
+
+[OCSP](https://www.acdiao.com/index.php/archives/112/)（在线证书状态协议）是用来代替 crl（证书吊销列表）以提高客户端验证服务端证书的效率的一种协议。OCSP Stapling 由服务端在 tls 握手阶段提供 OCSP 查询的缓存，防止 CA 服务器被 DDos 攻击。不过如此一来的话，服务端还是可信的吗？
+
 ### [Kong 源码学习笔记]()
 
 主要是学习一下 OpenSSL 在 Kong 中的运用，以及与此相关的代码执行过程。
@@ -37,6 +43,9 @@ date: 2022-01-04 08:50:15 +0000
   * set_cert
   * set_priv_key
 * 遍历 plugin_iterater 执行每个插件里面的 certificate 函数
+* TODO
+
+[ngx_http_ssl_module](https://nginx.org/en/docs/http/ngx_http_ssl_module.html) 学习笔记：
 * TODO
 
 ### [OpenResty 学习笔记]()
@@ -112,11 +121,7 @@ configure arguments: --prefix=/usr/local/openresty/nginx --with-cc-opt='-O2 -I/t
 案例
 ----
 
-使用 Nginx 做代理服务器，监听的端口是 8000，而后端服务器的端口是 80，一般的请求都能被正常处理，但是当服务器端返回重定向 (302) 时，客户端浏览器的 url 端口就丢了，页面也就无法访问了。经过调查 [Nginx 文档](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_redirect), 以下配置解决了此问题。
-
-```nginx.conf
-proxy_redirect http://$host http://$host:$server_port;
-```
+空空如也。
 
 
 体会
