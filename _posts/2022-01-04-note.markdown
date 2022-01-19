@@ -54,9 +54,7 @@ OpenSSL 相关的其他性能问题：
 
 ngx.ssl 是 OpenResty 对 Nginx 的[ngx_http_ssl_module](https://nginx.org/en/docs/http/ngx_http_ssl_module.html) 模块的封装。
 
-   ```
-   Nginx 的最基本模块称为核心模块（上下文的类型为 ngx_core_module_t），包括 regex，thread_pool，errlog，http，mail，events，openssl，stream等。ngx_http_ssl_module 是 http 核心模块定义的一种“子模块”（上下文的类型为 ngx_http_module_t），它的初始化以及事件处理时序等由 http 核心模块框定，所以学习 ngx_http_ssl_module 之前需要了解 [http 核心模块的一些基本内容](https://www.kancloud.cn/digest/understandingnginx/202604)。
-   ```
+> Nginx 的最基本模块称为核心模块（上下文的类型为 ngx_core_module_t），包括 regex，thread_pool，errlog，http，mail，events，openssl，stream等。ngx_http_ssl_module 是 http 核心模块定义的一种“子模块”（上下文的类型为 ngx_http_module_t），它的初始化以及事件处理时序等由 http 核心模块框定，所以学习 ngx_http_ssl_module 之前需要了解 [http 核心模块的一些基本内容](https://www.kancloud.cn/digest/understandingnginx/202604)。
 
 * ngx_http_ssl_module 处理的是客户端和 Nginx 服务器之间的安全问题，与反向代理模式的上游服务没有关系
 * ngx_http_ssl_module 不仅用于提供 https 服务，也用于验证安全客户端，例如指令 ssl_verify_client 等
@@ -71,8 +69,32 @@ ngx.ssl 是 OpenResty 对 Nginx 的[ngx_http_ssl_module](https://nginx.org/en/do
 
 ngx_openssl_module 是一个核心模块，在编译出来的 ngx_modules.c 中排第 4，前面还有 ngx_core_module，ngx_errlog_module，ngx_conf_module。ngx_openssl_module 的源代码在 event 子目录下。
 
+> 学习此模块还需要了解[event 核心模块的一些基本内容](https://www.kancloud.cn/digest/understandingnginx/202600)。http 核心模块向 event 核心模块注册事件处理函数，当请求事件发生时，事件处理函数被执行，包括使用 openssl 进行通信的整个过程！
+
    ```
-   学习此模块还需要了解[event 核心模块的一些基本内容](https://www.kancloud.cn/digest/understandingnginx/202600)。http 核心模块向 event 核心模块注册事件处理函数，当请求事件发生时，事件处理函数被执行，包括使用 openssl 进行通信的整个过程！
+   [root@hvm-test1 nginx-1.16.1]# grep -n NGX_HTTP_SSL src/http/ngx_http.c
+   1196:#if (NGX_HTTP_SSL)
+   1231:#if (NGX_HTTP_SSL)
+   1267:#if (NGX_HTTP_SSL)
+   1303:#if (NGX_HTTP_V2 && NGX_HTTP_SSL                                              \
+   1799:#if (NGX_HTTP_SSL)
+   1864:#if (NGX_HTTP_SSL)
+
+   [root@hvm-test1 src]# grep -n NGX_HTTP_SSL http/ngx_http_core_module.c
+   3975:#if (NGX_HTTP_SSL)
+   [root@hvm-test1 src]# grep -n NGX_HTTP_SSL http/ngx_http_request.c
+   62:#if (NGX_HTTP_SSL)
+   333:#if (NGX_HTTP_SSL)
+   606:#if (NGX_HTTP_SSL)
+   638:#if (NGX_HTTP_SSL)
+   1986:#if (NGX_HTTP_SSL)
+   2164:#if (NGX_HTTP_SSL && defined SSL_CTRL_SET_TLSEXT_HOSTNAME)
+   2195:#if (NGX_HTTP_SSL && defined SSL_CTRL_SET_TLSEXT_HOSTNAME)
+   2262:#if (NGX_HTTP_SSL && defined SSL_CTRL_SET_TLSEXT_HOSTNAME)
+   2294:#endif /* NGX_HTTP_SSL && defined SSL_CTRL_SET_TLSEXT_HOSTNAME */
+   3161:#if (NGX_HTTP_SSL)
+   3238:#if (NGX_HTTP_SSL)
+   3687:#if (NGX_HTTP_SSL)
 
    ngx_http_commands
    -> ngx_http_block
@@ -86,6 +108,7 @@ ngx_openssl_module 是一个核心模块，在编译出来的 ngx_modules.c 中�
    ```
 
 * 服务器接受请求和连接，协议栈是由底向上的，初始化处理中设置的最外层的回调函数对应协议栈最下层的入口
+* 在 http 框架代码中搜索 NGX_HTTP_SSL 宏，可以追踪全部调用 openssl 的地方
 * TODO
 
 ### [OpenResty 学习笔记]()
